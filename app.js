@@ -163,46 +163,30 @@ function updateBattleItem(i, battleItem, requiredTradeItems, requiredTradeItemsQ
 
 
 
-function calculateProfit(battleItem){
+function calculateProfit(battleItem){ // This is ok
 
   BattleItem.find({name: battleItem}, function(err,foundItem){
+    var battleItemSellingPrice = foundItem[0].price; // Battle Item's selling price
+    var battleItemPerCraftCost = foundItem[0].perCraftCost; // Batle Item's crafting cost
+    var battleItemPerCraftQuantity = foundItem[0].perCraftQuantity; // How many craft is supplied per craft process
+    var battleItemMarketFee = Math.ceil(battleItemSellingPrice/20);
+    var allTradeItemsCost = 0;
 
-    var sellingPrice = foundItem[0].price;
-    var craftingCost = 0;
-    var profitRate = ((sellingPrice/craftingCost)*100);
+    for(var i=0; i<foundItem[0].requirements.length; i++){
 
+      var tradeItemPrice = foundItem[0].requirements[i][0].price; // Trade Item's bundle price
+      var tradeItemBundle = foundItem[0].requirements[i][0].bundle; // Trade Item's bundle quantity (10 or 100)
+      var tradeItemRequirementQuantity = parseInt(foundItem[0].requirementQuantities[i]); // How many trade item is required per craft
 
+      var tradeItemCost = (tradeItemPrice*tradeItemRequirementQuantity)/tradeItemBundle;
+      allTradeItemsCost += tradeItemCost;
+    }
 
+    var allCraftingCost = ((allTradeItemsCost + battleItemPerCraftCost) / battleItemPerCraftQuantity)+battleItemMarketFee;
+    var profitRate = (battleItemSellingPrice / allCraftingCost)*100; // the result profit rate as %
+    console.log(profitRate);
 
-    // for(var i=0; i<foundItem[0].requirements.length; i++){
-    //
-    //
-    //
-    // }
-
-
-
-    // Selling Price:
-    // console.log(foundItem[0].price); // Selling price of battleItem
-
-    // Crafting Cost:
-    // console.log(foundItem[0].requirements);
-
-
-    // console.log(foundItem[0].requirements); // all trade items as array
-    // console.log(foundItem[0].requirements[0]); // first trade item as an object, need one more index
-    // console.log(foundItem[0].requirements[i][0]); // first trade item as an object. First and Third 0 has to be 0 constantly.
-
-    // console.log(foundItem[0].perCraftCost); // per craft cost as gold
-
-    // console.log(foundItem[0].requirementQuantities); // shows all array like ["5","10"]
-    // console.log(parseInt(foundItem[0].requirementQuantities[i])); // Shows the index of i like "5" as int.
-
-    // console.log(foundItem[0].requirements[i][j].bundle);
-    // console.log(parseInt(foundItem[0].requirementQuantities[i]));
-
-
-    // console.log(profitRate);
+    // return profitRate;
   });
 }
 
@@ -217,7 +201,7 @@ function setProfitValue(battleItem, profitRate){
 }
 
 
-calculateProfit("HP Potion");
+calculateProfit("Major HP Potion");
 
 
 
