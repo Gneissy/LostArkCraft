@@ -26,7 +26,7 @@
         <td class="cell" ><%= tradeItemDisplayed.bundle %></td> <!-- This is the object's bundle value (10-100) -->
         <!-- This is the item's current price value. We are able to change it on the way. -->
         <td class="cell" ><%= tradeItemDisplayed.price %> <span><img class="gold-image" src="images/gold-image.png" alt="gold-image"></span></td>
-        <td>2 hours ago</td>
+        <td class="cell-lastUpdate"><%= date1.from(tradeItemDisplayed.lastUpdate)  %></td>
         <td>
           <!-- This form allows me to change the item's price value. -->
           <form action="/change" method="post">

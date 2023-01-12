@@ -26,10 +26,11 @@
         <td class="cell" ><%= tradeItemDisplayed.bundle %></td> <!-- This is the object's bundle value (10-100) -->
         <!-- This is the item's current price value. We are able to change it on the way. -->
         <td class="cell" ><%= tradeItemDisplayed.price %> <span><img class="gold-image" src="images/gold-image.png" alt="gold-image"></span></td>
-        <td>2 hours ago</td>
+        <td class="cell-lastUpdate"><%= date1.from(tradeItemDisplayed.lastUpdate)  %></td>
+        
         <td>
           <!-- This form allows me to change the item's price value. -->
-          <form action="/<%= selectedType %>/change" method="post">
+          <form id= "myForm" action="/<%= selectedType %>/change" method="post">
 
             <!-- This is the price input that will be updated -->
             <input class = "setPrice" type="text" name="newPrice" autocomplete="off">
@@ -41,16 +42,25 @@
             <input type="hidden" name="specificItem" value="<%= tradeItemDisplayed._id %>">
 
             <!-- Action happens when the submit button is pressed -->
-            <button class="btn" type="submit" name="submitButton">✔</button>
+            <button class="btn uniqueSubmitButton" type="submit" name="submitButton">✔</button>
           </form>
         </td>
+<!-- <td>
+  <form action="/<%= selectedType %>/changeAll" method="post">
+    <button class= "submitAllButton btn" type="submit" name="submitAllButton">Submit All</button>
+    <input type="hidden" name="specificItem" value="<%= tradeItemDisplayed._id %>">
+    <input class = "setPrice" type="text" name="newPrice" autocomplete="off">
+
+
+  </form>
+
+</td> -->
       </tr>
     <% }); %>
     </table>
 
-    <form action="/<%= selectedType %>/changeAll" method="post">
-      <button class= "submitAllButton btn" type="submit" name="submitAllButton">Submit All</button>
-    </form>
+
+
 
 
   </div>
