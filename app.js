@@ -34,8 +34,10 @@ const requiredTradeItems = [];
 const selectedType = "";
 var i = 0;
 
-const requiredTradeItemsQuantity = ["6","24", "48"];
-const requiredTradeItemsString = ["Bright Wild Flower", "Shy Wild Flower", "Wild Flower"];
+
+
+const requiredTradeItemsQuantity = ["9","18"];
+const requiredTradeItemsString = ["Shy Wild Flower", "Wild Flower"];
 
 
 // Creating another DB Schema which is for Battle Items
@@ -50,32 +52,12 @@ const battleItemSchema = new mongoose.Schema({
   requirementQuantities: requiredTradeItemsQuantity, // [4, 10]
   perCraftCost: Number, // 14
   perCraftQuantity: Number, // 3
-  perCraftTimeSecond: Number // 25
+  perCraftTimeSecond: Number, // 25
+  profitRate: Number
 });
 // Creating the other collection which is BattleItems
 const BattleItem = mongoose.model("BattleItem", battleItemSchema); // "battleItems" collection is created
 
-
-
-// TradeItem.find({name: "Wild Flower"}, function(err, foundTradeItem){
-//   if(!err){
-//       requiredTradeItemsQuantity.push("4", "10");
-//       requiredTradeItems.push(foundTradeItem);
-//       TradeItem.find({name: "Shy Wild Flower"}, function(err, foundTradeItem){
-//         if(!err){
-//           requiredTradeItems.push(foundTradeItem);
-//           BattleItem.findOneAndUpdate({name:"HP Potion"}, {$set:{requirements: requiredTradeItems}}, {new: true}, function(err){
-//             console.log("HP Potion's requirements are updated.");
-//           });
-//           BattleItem.findOneAndUpdate({name:"HP Potion"}, {$set:{requirementQuantities: requiredTradeItemsQuantity}}, {new: true}, function(err){
-//             console.log("HP Potion's requirement quantities are updated.");
-//           });
-//         }else{
-//           console.log(err);
-//         }
-//       }); // WORKS
-//   }
-// });// i need to update it now.
 
 // In order to update price for both main page and specific type pages
 function updatePrice(requestedItemID, changedPrice, selectedType, res){
@@ -115,8 +97,8 @@ function updatePrice(requestedItemID, changedPrice, selectedType, res){
     });
 }
 
-
-// Creating new Battle Item (temp)
+// temp
+// Creating new Battle Item
 function createNewBattleItem(name, customID, type, rarity, price, perCraftCost, perCraftQuantity, perCraftTimeSecond){
   const newBattleItem = new BattleItem({ // This is an example object
     name: name,
@@ -136,59 +118,228 @@ function createNewBattleItem(name, customID, type, rarity, price, perCraftCost, 
 
 
 
-
+// temp
 // Updating existing battle item's requirements
-function updateBattleItem(i, battleItem, requiredTradeItems, requiredTradeItemsQuantity){ // i is how many types of material required
-  for(let a=0; a<i; a++){
-    TradeItem.find({name: requiredTradeItemsString[a]}, function(err, foundTradeItem){
-      requiredTradeItems.push(foundTradeItem);
-      BattleItem.findOneAndUpdate({name:battleItem},
+function updateBattleItem(battleItem, requiredTradeItemsString, requiredTradeItemsQuantity){ // i is how many types of material required
+    BattleItem.findOneAndUpdate({name:battleItem},
+      {
+        $set:
         {
-          $set:
-          {
-            requirements: requiredTradeItems,
-            requirementQuantities: requiredTradeItemsQuantity
-          }
-        }, {new: true}, function(err, foundObject){
-        console.log(a+1 + " of " + i + " updates for " + foundObject.name + " is successfully completed.");
-      });
+          requirements: requiredTradeItemsString,
+          requirementQuantities: requiredTradeItemsQuantity
+        }
+      }, {new: true}, function(err, foundObject){
+      console.log(foundObject.name + "'s requirements are successfully updated.");
     });
-
-    }
   }
 
  // createNewBattleItem("Elemental HP Potion", 3, "Recovery", "epic", 29, 30, 3, 3600);
- // updateBattleItem(3, "Elemental HP Potion", requiredTradeItems, requiredTradeItemsQuantity);
-
+// updateBattleItem("Major HP Potion", requiredTradeItemsString, requiredTradeItemsQuantity);
 
 
 
 function calculateProfit(battleItem){ // This is ok
-
   BattleItem.find({name: battleItem}, function(err,foundItem){
     var battleItemSellingPrice = foundItem[0].price; // Battle Item's selling price
     var battleItemPerCraftCost = foundItem[0].perCraftCost; // Batle Item's crafting cost
     var battleItemPerCraftQuantity = foundItem[0].perCraftQuantity; // How many craft is supplied per craft process
-    var battleItemMarketFee = Math.ceil(battleItemSellingPrice/20);
+    var battleItemMarketFee = Math.ceil(battleItemSellingPrice/20); // Fee price per Battle Item
     var allTradeItemsCost = 0;
 
-    for(var i=0; i<foundItem[0].requirements.length; i++){
+      // The reason im doing it one by one is that i can't use for loop properly in this situation.
+      if(foundItem[0].requirements.length > 0){ // If requirement quantity is bigger than 0,
+        TradeItem.find({name: foundItem[0].requirements[0]}, function (err, foundTradeItem){ // Find corresponding trade item
+          var tradeItemPrice = foundTradeItem[0].price; // Trade Item's bundle price
+          var tradeItemBundle = foundTradeItem[0].bundle; // Trade Item's bundle quantity (10 or 100)
+          var tradeItemRequirementQuantity = foundItem[0].requirementQuantities[0]; // How many of them we need
 
-      var tradeItemPrice = foundItem[0].requirements[i][0].price; // Trade Item's bundle price
-      var tradeItemBundle = foundItem[0].requirements[i][0].bundle; // Trade Item's bundle quantity (10 or 100)
-      var tradeItemRequirementQuantity = parseInt(foundItem[0].requirementQuantities[i]); // How many trade item is required per craft
+          var tradeItemCost = (tradeItemPrice / tradeItemBundle) * tradeItemRequirementQuantity; // Calculation of the cost of trade item
+          allTradeItemsCost += tradeItemCost; // Adding the sum of all trade items
+          // console.log(allTradeItemsCost);
+          if (foundItem[0].requirements.length == 1){
+            var allCraftingCost = ((allTradeItemsCost + battleItemPerCraftCost) / battleItemPerCraftQuantity) + battleItemMarketFee;
+            var profitRate = (battleItemSellingPrice / allCraftingCost) * 100;
+            BattleItem.findOneAndUpdate({name:battleItem},
+              {
+                $set:
+                {
+                  profitRate: profitRate
+                }
+              }, {new: true}, function(err, foundObject){
+              console.log(foundObject.name + "'s profit rate is updated.");
+            });
+          }
+         });
+      }
 
-      var tradeItemCost = (tradeItemPrice*tradeItemRequirementQuantity)/tradeItemBundle;
-      allTradeItemsCost += tradeItemCost;
-    }
+      if(foundItem[0].requirements.length > 1){ // If requirement quantity is bigger than 1,
+        TradeItem.find({name: foundItem[0].requirements[1]}, function (err, foundTradeItem){ // Find corresponding trade item
+          var tradeItemPrice = foundTradeItem[0].price; // Trade Item's bundle price
+          var tradeItemBundle = foundTradeItem[0].bundle; // Trade Item's bundle quantity (10 or 100)
+          var tradeItemRequirementQuantity = foundItem[0].requirementQuantities[1]; // How many of them we need
 
-    var allCraftingCost = ((allTradeItemsCost + battleItemPerCraftCost) / battleItemPerCraftQuantity)+battleItemMarketFee;
-    var profitRate = (battleItemSellingPrice / allCraftingCost)*100; // the result profit rate as %
-    console.log(profitRate);
+          var tradeItemCost = (tradeItemPrice / tradeItemBundle) * tradeItemRequirementQuantity; // Calculation of the cost of trade item
+          allTradeItemsCost += tradeItemCost; // Adding the sum of all trade items
+          // console.log(allTradeItemsCost);
+          if (foundItem[0].requirements.length == 2){
+            var allCraftingCost = ((allTradeItemsCost + battleItemPerCraftCost) / battleItemPerCraftQuantity) + battleItemMarketFee;
+            var profitRate = (battleItemSellingPrice / allCraftingCost) * 100;
+            BattleItem.findOneAndUpdate({name:battleItem},
+              {
+                $set:
+                {
+                  profitRate: profitRate
+                }
+              }, {new: true}, function(err, foundObject){
+              console.log(foundObject.name + "'s profit rate is updated.");
+            });
+          }
+         });
+      }
 
-    // return profitRate;
-  });
+      if(foundItem[0].requirements.length > 2){ // If requirement quantity is bigger than 2,
+        TradeItem.find({name: foundItem[0].requirements[2]}, function (err, foundTradeItem){ // Find corresponding trade item
+          var tradeItemPrice = foundTradeItem[0].price; // Trade Item's bundle price
+          var tradeItemBundle = foundTradeItem[0].bundle; // Trade Item's bundle quantity (10 or 100)
+          var tradeItemRequirementQuantity = foundItem[0].requirementQuantities[2]; // How many of them we need
+
+          var tradeItemCost = (tradeItemPrice / tradeItemBundle) * tradeItemRequirementQuantity; // Calculation of the cost of trade item
+          allTradeItemsCost += tradeItemCost; // Adding the sum of all trade items
+          // console.log(allTradeItemsCost);
+          if (foundItem[0].requirements.length == 3){
+            var allCraftingCost = ((allTradeItemsCost + battleItemPerCraftCost) / battleItemPerCraftQuantity) + battleItemMarketFee;
+            var profitRate = (battleItemSellingPrice / allCraftingCost) * 100;
+            BattleItem.findOneAndUpdate({name:battleItem},
+              {
+                $set:
+                {
+                  profitRate: profitRate
+                }
+              }, {new: true}, function(err, foundObject){
+              console.log(foundObject.name + "'s profit rate is updated.");
+            });
+          }
+         });
+      }
+
+      if(foundItem[0].requirements.length > 3){ // If requirement quantity is bigger than 3,
+        TradeItem.find({name: foundItem[0].requirements[3]}, function (err, foundTradeItem){ // Find corresponding trade item
+          var tradeItemPrice = foundTradeItem[0].price; // Trade Item's bundle price
+          var tradeItemBundle = foundTradeItem[0].bundle; // Trade Item's bundle quantity (10 or 100)
+          var tradeItemRequirementQuantity = foundItem[0].requirementQuantities[3]; // How many of them we need
+
+          var tradeItemCost = (tradeItemPrice / tradeItemBundle) * tradeItemRequirementQuantity; // Calculation of the cost of trade item
+          allTradeItemsCost += tradeItemCost; // Adding the sum of all trade items
+          // console.log(allTradeItemsCost);
+          if (foundItem[0].requirements.length == 4){
+            var allCraftingCost = ((allTradeItemsCost + battleItemPerCraftCost) / battleItemPerCraftQuantity) + battleItemMarketFee;
+            var profitRate = (battleItemSellingPrice / allCraftingCost) * 100;
+            BattleItem.findOneAndUpdate({name:battleItem},
+              {
+                $set:
+                {
+                  profitRate: profitRate
+                }
+              }, {new: true}, function(err, foundObject){
+              console.log(foundObject.name + "'s profit rate is updated.");
+            });
+          }
+         });
+      }
+
+      if(foundItem[0].requirements.length > 4){ // If requirement quantity is bigger than 4,
+        TradeItem.find({name: foundItem[0].requirements[4]}, function (err, foundTradeItem){ // Find corresponding trade item
+          var tradeItemPrice = foundTradeItem[0].price; // Trade Item's bundle price
+          var tradeItemBundle = foundTradeItem[0].bundle; // Trade Item's bundle quantity (10 or 100)
+          var tradeItemRequirementQuantity = foundItem[0].requirementQuantities[4]; // How many of them we need
+
+          var tradeItemCost = (tradeItemPrice / tradeItemBundle) * tradeItemRequirementQuantity; // Calculation of the cost of trade item
+          allTradeItemsCost += tradeItemCost; // Adding the sum of all trade items
+          // console.log(allTradeItemsCost);
+          if (foundItem[0].requirements.length == 5){
+            var allCraftingCost = ((allTradeItemsCost + battleItemPerCraftCost) / battleItemPerCraftQuantity) + battleItemMarketFee;
+            var profitRate = (battleItemSellingPrice / allCraftingCost) * 100;
+            BattleItem.findOneAndUpdate({name:battleItem},
+              {
+                $set:
+                {
+                  profitRate: profitRate
+                }
+              }, {new: true}, function(err, foundObject){
+              console.log(foundObject.name + "'s profit rate is updated.");
+            });
+          }
+         });
+      }
+
+      if(foundItem[0].requirements.length > 5){ // If requirement quantity is bigger than 5,
+        TradeItem.find({name: foundItem[0].requirements[5]}, function (err, foundTradeItem){ // Find corresponding trade item
+          var tradeItemPrice = foundTradeItem[0].price; // Trade Item's bundle price
+          var tradeItemBundle = foundTradeItem[0].bundle; // Trade Item's bundle quantity (10 or 100)
+          var tradeItemRequirementQuantity = foundItem[0].requirementQuantities[5]; // How many of them we need
+
+          var tradeItemCost = (tradeItemPrice / tradeItemBundle) * tradeItemRequirementQuantity; // Calculation of the cost of trade item
+          allTradeItemsCost += tradeItemCost; // Adding the sum of all trade items
+          // console.log(allTradeItemsCost);
+          if (foundItem[0].requirements.length == 6){
+            var allCraftingCost = ((allTradeItemsCost + battleItemPerCraftCost) / battleItemPerCraftQuantity) + battleItemMarketFee;
+            var profitRate = (battleItemSellingPrice / allCraftingCost) * 100;
+            BattleItem.findOneAndUpdate({name:battleItem},
+              {
+                $set:
+                {
+                  profitRate: profitRate
+                }
+              }, {new: true}, function(err, foundObject){
+              console.log(foundObject.name + "'s profit rate is updated.");
+            });
+          }
+         });
+      }
+
+
+
+
+
+
+
+
+//       // all trade item's cost is 0 here. This is the last problem.
+//       var allCraftingCost = ((allTradeItemsCost + battleItemPerCraftCost) / battleItemPerCraftQuantity) + battleItemMarketFee;
+//       console.log(allTradeItemsCost, battleItemPerCraftCost, battleItemPerCraftQuantity, battleItemMarketFee);
+// // console.log(allCraftingCost);
+//       var profitRate = (battleItemSellingPrice / allCraftingCost) * 100;
+//       // console.log(profitRate);
+
+    // var tradeItemRequirementQuantity = foundItem[0].requirementQuantities;
+
+//     for(var i=0; i<foundItem[0].requirements.length; i++){
+//       TradeItem.find({name: foundItem[0].requirements[i]}, function (err, foundTradeItem){  // This line of code is getting triggered when i = 2.
+// // console.log(i); // output: 2 // Why is i=2 ?
+//           var tradeItemPrice = foundTradeItem[0].price; // Trade Item's bundle price
+//           var tradeItemBundle = foundTradeItem[0].bundle; // Trade Item's bundle quantity (10 or 100)
+//           var tradeItemPerPrice = tradeItemPrice / tradeItemBundle;
+
+      // Main problem is here. "i" goes undefined because i=2 when this line of code is being executed @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+      // I dont know how to solve it, most probably it's about promises and async-await stuff. I tried so hard but couldn't find it, I'll check it later on.
+
+      // console.log(tradeItemCostArray);
+      // });
+// console.log(tradeItemRequirementQuantity[i]); // Output: 2
+          // allTradeItemsCost += tradeItemCost;
+// console.log(allTradeItemsCost);
+          // var allCraftingCost = (((allTradeItemsCost + battleItemPerCraftCost) / battleItemPerCraftQuantity)) + battleItemMarketFee;
+          // var profitRate = (battleItemSellingPrice / allCraftingCost)*100; // the result profit rate as %
+// console.log(profitRate); // Output: NaN because it's undefined for i=2
+      // }
+});
 }
+
+
+
+calculateProfit("Major HP Potion");
+
+
 
 
 function calculateEfficiency(){
@@ -201,7 +352,6 @@ function setProfitValue(battleItem, profitRate){
 }
 
 
-calculateProfit("Major HP Potion");
 
 
 
