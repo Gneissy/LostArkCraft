@@ -85,8 +85,8 @@
   <div class="otherColumn col-lg-6 col-md-12 col-sm-12">
 
     <div class="dropdown">
-      <button onclick="myFunction()" class="dropbtn">Select type</button>
-      <div id="myDropdown" class="dropdown-content">
+      <button onclick="toggleTradeItems()" class="dropbtn">Trade item type</button>
+      <div id="tradeDropdown" class="dropdown-content">
         <a href="/">All</a>
         <a href="/foraging">Foraging</a>
         <a href="/logging">Logging</a>
@@ -94,6 +94,15 @@
         <a href="/hunting">Hunting</a>
         <a href="/fishing">Fishing</a>
         <a href="/excavating">Excavating</a>
+      </div>
+    </div>
+
+    <div class="dropdown">
+      <button onclick="toggleBattleItems()" class="dropbtn">Battle item type</button>
+      <div id="battleDropdown" class="dropdown-content">
+        <a href="/">All</a>
+        <a href="/recovery">Recovery</a>
+
       </div>
     </div>
 

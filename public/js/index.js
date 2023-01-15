@@ -3,8 +3,13 @@
 
 
 // If user clicks the button, toggle betweel hiding and showing the dropdown content
-function myFunction() {
-  document.getElementById("myDropdown").classList.toggle("show");
+function toggleTradeItems() {
+  document.getElementById("tradeDropdown").classList.toggle("show");
+}
+
+// If user clicks the button, toggle betweel hiding and showing the dropdown content
+function toggleBattleItems() {
+  document.getElementById("battleDropdown").classList.toggle("show");
 }
 
 // Open and Close dropdown menu by clicking

@@ -1,3 +1,4 @@
+// Requirements and dependancies
 require('dotenv').config()
 const express = require("express"); // Express is required
 const app = express(); // I'll use "app" for accesing express
@@ -32,8 +33,10 @@ const TradeItem = mongoose.model("TradeItem", tradeItemSchema); // "tradeItems" 
 // Default parameters & variables
 const requiredTradeItems = [];
 const selectedType = "";
+const allTradeItemTypes = ["foraging", "logging", "mining", "hunting", "fishing", "excavating"];
+const allBattleItemTypes = ["recovery"];
 
-
+// Temporary parameters & variables (needed for creating new battle items)
 const requiredTradeItemsQuantity = ["9","18"];
 const requiredTradeItemsString = ["Shy Wild Flower", "Wild Flower"];
 
@@ -57,43 +60,92 @@ const battleItemSchema = new mongoose.Schema({
 const BattleItem = mongoose.model("BattleItem", battleItemSchema); // "battleItems" collection is created
 
 
+
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  Functions
 // In order to update price for both main page and specific type pages
 function updatePrice(requestedItemID, changedPrice, selectedType, res){
-  TradeItem.findOneAndUpdate( // Updating the object's price property
-    {
-      _id: requestedItemID // Finds the object,
-    }, {
-      $set: {
-        price: changedPrice // Updates the price.
-      }
-    },
-    function(err, result) {
-      if (!err) {
-        console.log("---");
-        console.log(result.name + "'s price is changed to " + changedPrice);
-        var lastUpdate = dayjs();
-        TradeItem.findOneAndUpdate(
-          {
-            _id: requestedItemID
-          }, {
-            $set:{
-              lastUpdate: lastUpdate // setting the last update time
+  var isBattleItem = allBattleItemTypes.includes(selectedType);
+  var isTradeItem = allTradeItemTypes.includes(selectedType);
+
+  if (isBattleItem){ // If its a type of Battle item,
+    BattleItem.findOneAndUpdate( // Updating the object's price property
+      {
+        _id: requestedItemID // Finds the object,
+      }, {
+        $set: {
+          price: changedPrice // Updates the price.
+        }
+      },
+      function(err, result) {
+        if (!err) {
+          console.log("---");
+          console.log(result.name + "'s price is changed to " + changedPrice);
+          var lastUpdate = dayjs();
+          BattleItem.findOneAndUpdate(
+            {
+              _id: requestedItemID
+            }, {
+              $set:{
+                lastUpdate: lastUpdate // setting the last update time
+              }
+            }, {new: true}, function(err){
+            if(!err){
+              console.log("Last update date for "+result.name+" is up to date now.");
+              console.log("---");
+               // Calculate and set values of related battle items' profit rate after battle item's price change
+              calculateProfit(result.name);
+            }else{
+              console.log(err);
             }
-          }, {new: true}, function(err){
-          if(!err){
-            console.log("Last update date for "+result.name+" is up to date now.");
-            console.log("---");
-            calculateProfitAfterChangingPrice(result.name); // Calculate and set values of related battle items' profit rate
-          }else{
-            console.log(err);
-          }
-        });
-      // console.log(lastUpdate); // just to control what we got
-        res.redirect("/"+ selectedType);
-      } else {
-        console.log(err);
-      }
-    });
+          });
+        // console.log(lastUpdate); // just to control what we got
+          res.redirect("/"+ selectedType);
+        } else {
+          console.log(err);
+        }
+      });
+  }
+
+  else if(isTradeItem){ // If its a type of Trade item,
+    TradeItem.findOneAndUpdate( // Updating the object's price property
+      {
+        _id: requestedItemID // Finds the object,
+      }, {
+        $set: {
+          price: changedPrice // Updates the price.
+        }
+      },
+      function(err, result) {
+        if (!err) {
+          console.log("---");
+          console.log(result.name + "'s price is changed to " + changedPrice);
+          var lastUpdate = dayjs();
+          TradeItem.findOneAndUpdate(
+            {
+              _id: requestedItemID
+            }, {
+              $set:{
+                lastUpdate: lastUpdate // setting the last update time
+              }
+            }, {new: true}, function(err){
+            if(!err){
+              console.log("Last update date for "+result.name+" is up to date now.");
+              console.log("---");
+               // Calculate and set values of related battle items' profit rate after its required trade item's price
+              calculateProfitAfterChangingPrice(result.name);
+            }else{
+              console.log(err);
+            }
+          });
+        // console.log(lastUpdate); // just to control what we got
+          res.redirect("/"+ selectedType);
+        } else {
+          console.log(err);
+        }
+      });
+  }
 }
 
 // temp
@@ -115,8 +167,6 @@ function createNewBattleItem(name, customID, type, rarity, price, perCraftCost, 
 }
 
 
-
-
 // temp
 // Updating existing battle item's requirements
 function updateBattleItem(battleItem, requiredTradeItemsString, requiredTradeItemsQuantity){ // i is how many types of material required
@@ -132,11 +182,8 @@ function updateBattleItem(battleItem, requiredTradeItemsString, requiredTradeIte
     });
   }
 
- // createNewBattleItem("Elemental HP Potion", 3, "Recovery", "epic", 29, 30, 3, 3600);
-// updateBattleItem("Major HP Potion", requiredTradeItemsString, requiredTradeItemsQuantity);
 
-
-function calculateProfit(battleItem){ // This is ok
+function calculateProfit(battleItem){ // This works properly, calculates the corresponding battle item's profit rate
   BattleItem.find({name: battleItem}, function(err,foundItem){
     var battleItemSellingPrice = foundItem[0].price; // Battle Item's selling price
     var battleItemPerCraftCost = foundItem[0].perCraftCost; // Batle Item's crafting cost
@@ -330,7 +377,9 @@ function calculateProfit(battleItem){ // This is ok
 });
 }
 
+
 // This function is used for re-calculating related battle items' profit rate after changing a trade item's price
+// This function will be used when trade or battle item price change process. (Essentially updatePrice function)
 function calculateProfitAfterChangingPrice(foundTradeItem){ // foundTradeItem is basically the trade item whose price is changed.
   BattleItem.find({requirements: foundTradeItem}, function(err, foundItem){ // Find all battle items related to the trade item whose price is changed
       for(var i=0; i< foundItem.length; i++){ // No need to be async
@@ -338,11 +387,6 @@ function calculateProfitAfterChangingPrice(foundTradeItem){ // foundTradeItem is
       }
   });
 }
-
-
-// calculateProfit("Major HP Potion");
-
-
 
 
 function calculateEfficiency(){
@@ -362,7 +406,7 @@ function setProfitValue(battleItem, profitRate){
 
 
 
-// ________________________________________________________________Get requests
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  Get requests
 app.get("/", function(req, res) { // Home Page as home.ejs
   date1 = dayjs(); // to get exact "now" when client is entered the site
   TradeItem.find({}, function(err, tradeItems) { // Find Horse objects having "" properties (all)
@@ -376,20 +420,44 @@ app.get("/", function(req, res) { // Home Page as home.ejs
 app.get("/:selectedType", function(req, res) { // Be selected with dropdown menu
   const selectedType = req.params.selectedType; // Whatever is selected
   date1 = dayjs();  // to get exact "now" when client is entered the site
-  TradeItem.find({
-    type: selectedType // Query by selected type
-  }, function(err, tradeItems) {
-    res.render("customHome", {
-      tradeItemDisplayed: tradeItems, // Display to user whatever selected
-      selectedType: selectedType,
-      date1: date1 // to show relative last update time
+  var isBattleItem = allBattleItemTypes.includes(selectedType);
+  var isTradeItem = allTradeItemTypes.includes(selectedType);
+
+  if(isBattleItem){ // If the input is a type of battle item,
+    BattleItem.find({
+      type: selectedType // Query by selected type
+    }, function(err, battleItems) {
+      res.render("customHome", {
+        tradeItemDisplayed: battleItems, // Display to user whatever selected
+        selectedType: selectedType,
+        date1: date1 // to show relative last update time
+      });
     });
-  });
+  }
+
+  else if(isTradeItem){ // If the input is a type of trade item,
+    TradeItem.find({
+      type: selectedType // Query by selected type
+    }, function(err, tradeItems) {
+      res.render("customHome", {
+        tradeItemDisplayed: tradeItems, // Display to user whatever selected
+        selectedType: selectedType,
+        date1: date1 // to show relative last update time
+      });
+    });
+  }
+
+  else if(isBattleItem==false && isTradeItem==false){
+    res.sendStatus(404);
+    console.log("This type of input doesnt exist");
+  }else{
+    console.log(err);
+  }
 });
 
 
 
-// _______________________________________________________________Post Requests
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Post Requests
 app.post("/", function(req, res) { // Post request (when someone pressed submit button)
   const newTradeItem = new TradeItem({ // Creating a new object
     name: req.body.newItemName,
@@ -408,18 +476,17 @@ app.post("/", function(req, res) { // Post request (when someone pressed submit 
   });
 });
 
-
 app.post("/change", function(req, res) { // Changing the price of the specific item
   const requestedItemID = req.body.specificItem; // Gets the id of corresponding item (via hidden input's value)
   const changedPrice = req.body.newPrice; // Gets the price client has entered
-  updatePrice(requestedItemID, changedPrice, selectedType, res);
+  updatePrice(requestedItemID, changedPrice, selectedType, res); // Updates the new price
 });
 
 app.post("/:selectedType/change", function(req, res) { // Changing the price of the specific item
   const selectedType = req.params.selectedType; // Whatever is selected
   const requestedItemID = req.body.specificItem; // Gets the id of corresponding item (via hidden input's value)
   const changedPrice = req.body.newPrice; // Gets the price client has entered
-  updatePrice(requestedItemID, changedPrice, selectedType, res);
+  updatePrice(requestedItemID, changedPrice, selectedType, res); // Updates the new price
 });
 
 
