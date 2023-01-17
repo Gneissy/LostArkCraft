@@ -182,7 +182,7 @@ function updateBattleItem(battleItem, requiredTradeItemsString, requiredTradeIte
     });
   }
 
-
+// hp potion
 function calculateProfit(battleItem){ // This works properly, calculates the corresponding battle item's profit rate
   BattleItem.find({name: battleItem}, function(err,foundItem){
     var battleItemSellingPrice = foundItem[0].price; // Battle Item's selling price
@@ -193,6 +193,7 @@ function calculateProfit(battleItem){ // This works properly, calculates the cor
 
       // The reason im doing it one by one is that i can't use for loop properly in this situation.
       const calculateProfitForIndex0 = async function(){
+        setTimeout(function(){
           if(foundItem[0].requirements.length > 0){ // If requirement quantity is bigger than 0,
             TradeItem.find({name: foundItem[0].requirements[0]}, function (err, foundTradeItem){ // Find corresponding trade item
               var tradeItemPrice = foundTradeItem[0].price; // Trade Item's bundle price
@@ -217,7 +218,8 @@ function calculateProfit(battleItem){ // This works properly, calculates the cor
               }
              });
           }
-        }
+        }, 50);
+      }
 
       const calculateProfitForIndex1 = async function(){
         setTimeout(function(){
@@ -245,7 +247,7 @@ function calculateProfit(battleItem){ // This works properly, calculates the cor
               }
              });
           }
-        }, 50);
+        }, 100);
       } // Required 50 ms setTimeout
 
       const calculateProfitForIndex2 = async function(){
@@ -274,7 +276,7 @@ function calculateProfit(battleItem){ // This works properly, calculates the cor
               }
              });
           }
-        }, 100);
+        }, 150);
       } // Required 50 ms setTimeout
 
       const calculateProfitForIndex3 = async function(){
@@ -303,7 +305,7 @@ function calculateProfit(battleItem){ // This works properly, calculates the cor
               }
              });
           }
-        }, 150);
+        }, 200);
       } // Required 50 ms setTimeout
 
       const calculateProfitForIndex4 = async function(){
@@ -332,7 +334,7 @@ function calculateProfit(battleItem){ // This works properly, calculates the cor
               }
              });
           }
-        }, 200);
+        }, 250);
       } // Required 50 ms setTimeout
 
       const calculateProfitForIndex5 = async function(){
@@ -361,7 +363,7 @@ function calculateProfit(battleItem){ // This works properly, calculates the cor
               }
              });
           }
-        }, 250);
+        }, 300);
       } // Required 50 ms setTimeout
 
       function calculateOverallProfit(){ // This function lets me async execution
@@ -401,11 +403,6 @@ function setProfitValue(battleItem, profitRate){
 
 
 
-
-
-
-
-
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  Get requests
 app.get("/", function(req, res) { // Home Page as home.ejs
   date1 = dayjs(); // to get exact "now" when client is entered the site
@@ -415,6 +412,20 @@ app.get("/", function(req, res) { // Home Page as home.ejs
       date1: date1 // to show relative last update time
     });
   });
+});
+
+app.get("/profit", function(req, res) { // Home Page as home.ejs
+  date1 = dayjs(); // to get exact "now" when client is entered the site
+  BattleItem
+    .find({}, function(err, battleItems) { // Find Horse objects having "" properties (all)
+      res.render("profit", { // send "home.ejs"
+        tradeItemDisplayed: battleItems, // "tradeItemDisplayed" in home.ejs is "tradeItems" in app.js find function
+        date1: date1 // to show relative last update time
+    });
+  })
+    .sort({
+      profitRate: -1 // This sorts values descendantly according to profitRate (The highest profit rate first)
+    });
 });
 
 app.get("/:selectedType", function(req, res) { // Be selected with dropdown menu

@@ -1,0 +1,74 @@
+<%# Including header partial %>
+<%- include("partials/header"); -%>
+
+
+<div class="row">
+  <div class="tradeItemsColumn col-lg-6 col-md-12 col-sm-12">
+    <table>
+
+      <tr>
+        <td>img</td>
+        <td class= "item-name">Item Name</td>
+        <td class="cell" >Profit Rate</td>
+
+      </tr>
+
+    <% tradeItemDisplayed.slice().forEach(function(tradeItemDisplayed){ %> <!-- This allows us to loop all raws -->
+      <tr class= "rarity-<%= tradeItemDisplayed.rarity %>"> <!-- This includes background color correspoding to rarity -->
+        <td>
+          <div class="img">
+            <img src="images/<%= tradeItemDisplayed.name %>.png" alt="ex"> <!-- This allows me to assign images according to trade item name -->
+          </div>
+        </td>
+        <td class= "item-name"><%= tradeItemDisplayed.name %></td> <!-- This is the object's name -->
+        <td class="cell" ><%= tradeItemDisplayed.profitRate.toFixed(2) %>%</td>
+      </tr>
+    <% }); %>
+
+    </table>
+    <%# This is for an example post request %>
+
+  </div>
+
+
+
+  <div class="otherColumn col-lg-6 col-md-12 col-sm-12">
+
+    <div class="dropdown">
+      <button onclick="toggleTradeItems()" class="dropbtn">Trade item type</button>
+      <div id="tradeDropdown" class="dropdown-content">
+        <a href="/">All</a>
+        <a href="/foraging">Foraging</a>
+        <a href="/logging">Logging</a>
+        <a href="/mining">Mining</a>
+        <a href="/hunting">Hunting</a>
+        <a href="/fishing">Fishing</a>
+        <a href="/excavating">Excavating</a>
+      </div>
+    </div>
+
+    <div class="dropdown">
+      <button onclick="toggleBattleItems()" class="dropbtn">Battle item type</button>
+      <div id="battleDropdown" class="dropdown-content">
+        <a href="/">All</a>
+        <a href="/recovery">Recovery</a>
+
+      </div>
+    </div>
+
+
+  </div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<%# Including footer partial %>
+<%- include("partials/footer"); -%>
