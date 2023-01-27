@@ -17,13 +17,14 @@
       <tr class= "rarity-<%= tradeItemDisplayed.rarity %>"> <!-- This includes background color correspoding to rarity -->
         <td>
           <div class="img">
-            <img src="images/<%= tradeItemDisplayed.name %>.png" alt="ex"> <!-- This allows me to assign images according to trade item name -->
+            <img class = "item-image" src="images/<%= tradeItemDisplayed.name %>.png" alt="ex"> <!-- This allows me to assign images according to trade item name -->
           </div>
         </td>
         <td class= "item-name"><%= tradeItemDisplayed.name %></td> <!-- This is the object's name -->
         <td class="cell" ><%= tradeItemDisplayed.profitRate.toFixed(2) %>%</td>
       </tr>
     <% }); %>
+
 
     </table>
     <%# This is for an example post request %>

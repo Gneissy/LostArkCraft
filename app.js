@@ -34,11 +34,12 @@ const TradeItem = mongoose.model("TradeItem", tradeItemSchema); // "tradeItems" 
 const requiredTradeItems = [];
 const selectedType = "";
 const allTradeItemTypes = ["foraging", "logging", "mining", "hunting", "fishing", "excavating"];
-const allBattleItemTypes = ["recovery"];
+const allBattleItemTypes = ["recovery", "offense", "utility", "buff"];
 
 // Temporary parameters & variables (needed for creating new battle items)
-const requiredTradeItemsQuantity = ["9","18"];
-const requiredTradeItemsString = ["Shy Wild Flower", "Wild Flower"];
+const requiredTradeItemsString = ["Exquisite Mushroom", "Fresh Mushroom", "Sturdy Timber", "Rare Relic", "Crude Mushroom"];
+const requiredTradeItemsQuantity = ["5","20","2","4","40"];
+
 
 
 // Creating another DB Schema which is for Battle Items
@@ -182,9 +183,19 @@ function updateBattleItem(battleItem, requiredTradeItemsString, requiredTradeIte
     });
   }
 
-// hp potion
+  // createNewBattleItem("Stimulant", 30, "buff", "epic", 58, 30, 3, 3600);
+  // updateBattleItem("Stimulant", requiredTradeItemsString, requiredTradeItemsQuantity);
+
+
+
+
+
+
+
+
 function calculateProfit(battleItem){ // This works properly, calculates the corresponding battle item's profit rate
   BattleItem.find({name: battleItem}, function(err,foundItem){
+
     var battleItemSellingPrice = foundItem[0].price; // Battle Item's selling price
     var battleItemPerCraftCost = foundItem[0].perCraftCost; // Batle Item's crafting cost
     var battleItemPerCraftQuantity = foundItem[0].perCraftQuantity; // How many craft is supplied per craft process
@@ -435,19 +446,23 @@ app.get("/:selectedType", function(req, res) { // Be selected with dropdown menu
   var isTradeItem = allTradeItemTypes.includes(selectedType);
 
   if(isBattleItem){ // If the input is a type of battle item,
-    BattleItem.find({
-      type: selectedType // Query by selected type
-    }, function(err, battleItems) {
-      res.render("customHome", {
-        tradeItemDisplayed: battleItems, // Display to user whatever selected
-        selectedType: selectedType,
-        date1: date1 // to show relative last update time
+    BattleItem
+    .find({type: selectedType }, // Query by selected type
+      function(err, battleItems) {
+        res.render("customHome", {
+          tradeItemDisplayed: battleItems, // Display to user whatever selected
+          selectedType: selectedType,
+          date1: date1 // to show relative last update time
       });
+    })
+    .sort({
+      customID: 1 // Sorts ascendingly like the same with the game
     });
   }
 
   else if(isTradeItem){ // If the input is a type of trade item,
-    TradeItem.find({
+    TradeItem
+    .find({
       type: selectedType // Query by selected type
     }, function(err, tradeItems) {
       res.render("customHome", {
@@ -455,6 +470,10 @@ app.get("/:selectedType", function(req, res) { // Be selected with dropdown menu
         selectedType: selectedType,
         date1: date1 // to show relative last update time
       });
+    })
+
+    .sort({
+      customID: 1 // Sorts ascendingly like the same with the game
     });
   }
 
