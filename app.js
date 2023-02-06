@@ -522,17 +522,18 @@ app.post("/", function(req, res) { // Post request (when someone pressed submit 
   });
 });
 
-app.post("/change", function(req, res) { // Changing the price of the specific item
+app.post("/change", async function(req, res) { // Changing the price of the specific item
   const requestedItemID = req.body.specificItem; // Gets the id of corresponding item (via hidden input's value)
   const changedPrice = req.body.newPrice; // Gets the price client has entered
-  updatePrice(requestedItemID, changedPrice, selectedType, res); // Updates the new price
+
+  await updatePrice(requestedItemID, changedPrice, selectedType, res); // Updates the new price
 });
 
-app.post("/:selectedType/change", function(req, res) { // Changing the price of the specific item
+app.post("/:selectedType/change", async function(req, res) { // Changing the price of the specific item
   const selectedType = req.params.selectedType; // Whatever is selected
   const requestedItemID = req.body.specificItem; // Gets the id of corresponding item (via hidden input's value)
   const changedPrice = req.body.newPrice; // Gets the price client has entered
-  updatePrice(requestedItemID, changedPrice, selectedType, res); // Updates the new price
+  await updatePrice(requestedItemID, changedPrice, selectedType, res); // Updates the new price
 });
 
 
