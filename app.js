@@ -79,7 +79,7 @@ function updatePrice(requestedItemID, changedPrice, selectedType, res){
           price: changedPrice // Updates the price.
         }
       },
-      function(err, result) {
+      function(err, result) { // i couldn't make async await here, it just doesnt work properly for some reason
         if (!err) {
           console.log("---");
           console.log(result.name + "'s price is changed to " + changedPrice);
@@ -118,7 +118,7 @@ function updatePrice(requestedItemID, changedPrice, selectedType, res){
           price: changedPrice // Updates the price.
         }
       },
-      function(err, result) {
+      function(err, result) { // i couldn't make async await here, it just doesnt work properly for some reason
         if (!err) {
           console.log("---");
           console.log(result.name + "'s price is changed to " + changedPrice);
