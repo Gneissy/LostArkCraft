@@ -418,8 +418,8 @@ function calculateEfficiency(){
 }
 
 
-function setProfitValue(battleItem, profitRate){
-  BattleItem.findOneAndUpdate({name: battleItem}, {$set:{profitRate: profitRate}}, {new: true}, function(err, foundObject){console.log(foundObject+"'s profit rate is updated.");});
+async function setProfitValue(battleItem, profitRate){
+  await BattleItem.findOneAndUpdate({name: battleItem}, {$set:{profitRate: profitRate}}, {new: true}, function(err, foundObject){console.log(foundObject+"'s profit rate is updated.");});
 }
 
 
