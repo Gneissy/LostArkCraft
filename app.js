@@ -13,6 +13,18 @@ app.use(express.static("public")); // Static method in order to access local fil
 app.set("view engine", "ejs"); // EJS is set
 var _ = require('lodash'); // Lodash is required
 const mongoose = require("mongoose"); // Mongoose is required
+
+const connectDB = async function(){
+  try {
+    const conn = await mongoose.connect(process.env.MONGOSERVER);
+    console.log("MongoDB is connected");
+  }catch(err){
+    console.log(err);
+    process.exit(1);
+  }
+}
+
+
 mongoose.connect(process.env.MONGOSERVER); // Connecting Mongo Database, Collection & Mongo Atlas
 
 // Creating a DB Schema
@@ -525,6 +537,8 @@ app.post("/:selectedType/change", function(req, res) { // Changing the price of 
 
 
 // Running the server
-app.listen(process.env.PORT || 3000, function() {
-  console.log("Server is on and ready to wrack baby");
+connectDB().then(function (){
+  app.listen(process.env.PORT || 3000, function() {
+    console.log("Server is on and ready to wrack baby");
+  });
 });
