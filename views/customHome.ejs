@@ -4,29 +4,29 @@
 
 <div class="row">
   <div class="tradeItemsColumn col-lg-6 col-md-12 col-sm-12">
-    <table>
+    <table class = main-table>
 
-      <tr>
-        <td>img</td>
-        <td class= "item-name">Item Name</td>
-        <td class="cell" >Bundle</td>
-        <td class="cell" >Price</td>
-        <td class="cell" >Last Update:</td>
-        <td class="cell" >Set new price:</td>
+      <tr class = table-raw>
+        <td class = "table-data">img</td>
+        <td class= "table-data item-name">Item Name</td>
+        <td class="table-data cell" >Bundle</td>
+        <td class="table-data cell" >Price</td>
+        <td class="table-data cell" >Last Update:</td>
+        <td class="table-data cell" >Set new price:</td>
       </tr>
 
     <% tradeItemDisplayed.slice().forEach(function(tradeItemDisplayed){ %> <!-- This allows us to loop all raws -->
-      <tr class= "rarity-<%= tradeItemDisplayed.rarity %>"> <!-- This includes background color correspoding to rarity -->
-        <td>
+      <tr class= "table-raw rarity-<%= tradeItemDisplayed.rarity %>"> <!-- This includes background color correspoding to rarity -->
+        <td class = "table-data">
           <div class="img">
             <img class = "item-image" src="images/<%= tradeItemDisplayed.name %>.png" alt="ex"> <!-- This allows me to assign images according to trade item name -->
           </div>
         </td>
-        <td class= "item-name"><%= tradeItemDisplayed.name %></td> <!-- This is the object's name -->
-        <td class="cell" ><%= tradeItemDisplayed.bundle %></td> <!-- This is the object's bundle value (10-100) -->
+        <td class= "table-data item-name"><%= tradeItemDisplayed.name %></td> <!-- This is the object's name -->
+        <td class="table-data cell" ><%= tradeItemDisplayed.bundle %></td> <!-- This is the object's bundle value (10-100) -->
         <!-- This is the item's current price value. We are able to change it on the way. -->
-        <td class="cell" ><%= tradeItemDisplayed.price %> <span><img class="gold-image" src="images/gold-image.png" alt="gold-image"></span></td>
-        <td class="cell-lastUpdate"><%= date1.from(tradeItemDisplayed.lastUpdate)  %></td>
+        <td class="table-data cell" ><%= tradeItemDisplayed.price %> <span><img class="gold-image" src="images/gold-image.png" alt="gold-image"></span></td>
+        <td class="table-data cell-lastUpdate"><%= date1.from(tradeItemDisplayed.lastUpdate)  %></td>
 
         <td>
           <!-- This form allows me to change the item's price value. -->
@@ -50,11 +50,10 @@
     </table>
 
   </div>
-  <div class="otherColumn col-lg-6 col-md-12 col-sm-12">
+  <div class="customHome-buttons col-lg-6 col-md-12 col-sm-12">
     <div class="dropdown">
       <button onclick="toggleTradeItems()" class="dropbtn">Select trade item type</button>
       <div id="tradeDropdown" class="dropdown-content">
-        <a href="/">All</a>
         <a href="/foraging">Foraging</a>
         <a href="/logging">Logging</a>
         <a href="/mining">Mining</a>
@@ -67,7 +66,6 @@
     <div class="dropdown">
       <button onclick="toggleBattleItems()" class="dropbtn">Select battle item type</button>
       <div id="battleDropdown" class="dropdown-content">
-        <a href="/">All</a>
         <a href="/recovery">Recovery</a>
         <a href="/offense">Offense</a>
         <a href="/utility">Utility</a>

@@ -13,7 +13,6 @@ app.use(express.static("public")); // Static method in order to access local fil
 app.set("view engine", "ejs"); // EJS is set
 var _ = require('lodash'); // Lodash is required
 const mongoose = require("mongoose"); // Mongoose is required
-// mongoose.connect("mongodb://127.0.0.1:27017/lostarkItemDB"); // Connecting Mongo Database, Collection & Mongo Atlas
 mongoose.connect(process.env.MONGOSERVER); // Connecting Mongo Database, Collection & Mongo Atlas
 
 // Creating a DB Schema
@@ -417,12 +416,17 @@ function setProfitValue(battleItem, profitRate){
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  Get requests
 app.get("/", function(req, res) { // Home Page as home.ejs
   date1 = dayjs(); // to get exact "now" when client is entered the site
-  TradeItem.find({}, function(err, tradeItems) { // Find Horse objects having "" properties (all)
-    res.render("home", { // send "home.ejs"
-      tradeItemDisplayed: tradeItems, // "tradeItemDisplayed" in home.ejs is "tradeItems" in app.js find function
-      date1: date1 // to show relative last update time
+  BattleItem
+    .find({}, function(err, battleItems) { // Find Horse objects having "" properties (all)
+      res.render("home", { // send "home.ejs"
+        tradeItemDisplayed: battleItems, // "tradeItemDisplayed" in home.ejs is "tradeItems" in app.js find function
+        date1: date1 // to show relative last update time
     });
-  });
+  })
+    .sort({
+      profitRate: -1 // This sorts values descendantly according to profitRate (The highest profit rate first)
+    })
+    .limit(8) // Limits that only 8 return will be happen instead all.
 });
 
 app.get("/profit", function(req, res) { // Home Page as home.ejs

@@ -3,114 +3,97 @@
 
 
 <div class="row">
-  <div class="tradeItemsColumn col-lg-6 col-md-12 col-sm-12">
-    <table>
 
-      <tr>
-        <td>img</td>
-        <td class= "item-name">Item Name</td>
-        <td class="cell" >Bundle</td>
-        <td class="cell" >Price</td>
-        <td class="cell" >Last Update:</td>
-        <td class="cell" >Set new price:</td>
+    <div class="col-lg-6 col-md-12 col-sm-12">
+
+      <div class= "enterance-div">
+        <div class="container enterance-info-component">
+          <h1 class = "enterance-title">What is this app all about?</h1>
+            <p class = "enterance-content">This calculation site is used in order to maximize the crafting profit in the game <strong>LOST ARK</strong>.</p>
+            <p class = "enterance-content enterance-content-detail"><strong>Trade Items</strong> are materials that is being required to craft Battle Items.</p>
+            <p class = "enterance-content enterance-content-detail"><strong>Battle Items</strong> are consumables that will be sold after being crafted.</p>
+            <p class = "enterance-content">The whole point is to track both Trade and Battle items' prices in order to calculate <strong>the most profitable</strong> battle item that can be crafted. The idea here is to create a <strong>public calculation</strong> form that doesn't require everyone to do it all over again.</p>
+        </div>
+        <div class="container enterance-info-component">
+          <h1 class = "enterance-title">How does this site work?</h1>
+          <p class = "enterance-content">Profit rates are always updated in response to <strong>price adjustments</strong> for trade or battle items. The app performs all calculations automatically; <strong>all you have to do is enter prices</strong> that are current at the time.</p>
+          <p class = "enterance-content">To use this app efficiently, check last update time of items and see the highest <strong>Profit Rate</strong> in battle items. It is recommended to update prices if last update is more than 6 hours.</p> -->
+        </div>
+        <div class="container enterance-info-component">
+          <h1 class = "enterance-title">How to use the app?</h1>
+          <p class = "enterance-content"><strong>All you have to do is enter prices</strong> that are current at the time.</p>
+          <p class = "enterance-content">You can start changing prices here:</p>
+          <div class="dropdown-container">
+            <div class="dropdown">
+              <button onclick="toggleTradeItems()" class="dropbtn">Trade item type</button>
+              <div id="tradeDropdown" class="dropdown-content">
+                <a href="/foraging">Foraging</a>
+                <a href="/logging">Logging</a>
+                <a href="/mining">Mining</a>
+                <a href="/hunting">Hunting</a>
+                <a href="/fishing">Fishing</a>
+                <a href="/excavating">Excavating</a>
+              </div>
+            </div>
+
+            <div class="dropdown">
+              <button onclick="toggleBattleItems()" class="dropbtn">Battle item type</button>
+              <div id="battleDropdown" class="dropdown-content">
+                <a href="/recovery">Recovery</a>
+                <a href="/offense">Offense</a>
+                <a href="/utility">Utility</a>
+                <a href="/buff">Buff</a>
+
+
+              </div>
+            </div>
+
+          <!-- <p class = "enterance-content">To use this app efficiently, check last update time of items and see the highest <strong>PROFIT RATE</strong> in battle items. It is recommended to update prices if last update is more than 6 hours.</p> --> -->
+        </div>
+      </div>
+
+
+
+</div>
+
+
+    </div>
+
+
+
+
+  <div class="tradeItemsColumn col-lg-6 col-md-12 col-sm-12">
+    <h1 class = "enterance-title">Current Best Profit Rates</h1>
+
+    <table class = "main-table">
+
+      <tr class = table-raw>
+        <td class = "table-data">img</td>
+        <td class= "table-data item-name">Item Name</td>
+        <td class=" table-data cell" >Profit Rate</td>
+
       </tr>
 
     <% tradeItemDisplayed.slice().forEach(function(tradeItemDisplayed){ %> <!-- This allows us to loop all raws -->
-      <tr class= "rarity-<%= tradeItemDisplayed.rarity %>"> <!-- This includes background color correspoding to rarity -->
-        <td>
+      <tr class= "table-raw rarity-<%= tradeItemDisplayed.rarity %>"> <!-- This includes background color correspoding to rarity -->
+        <td class = "table-data">
           <div class="img">
             <img class = "item-image" src="images/<%= tradeItemDisplayed.name %>.png" alt="ex"> <!-- This allows me to assign images according to trade item name -->
           </div>
         </td>
-        <td class= "item-name"><%= tradeItemDisplayed.name %></td> <!-- This is the object's name -->
-        <td class="cell" ><%= tradeItemDisplayed.bundle %></td> <!-- This is the object's bundle value (10-100) -->
-        <!-- This is the item's current price value. We are able to change it on the way. -->
-        <td class="cell" ><%= tradeItemDisplayed.price %> <span><img class="gold-image" src="images/gold-image.png" alt="gold-image"></span></td>
-        <td class="cell-lastUpdate"><%= date1.from(tradeItemDisplayed.lastUpdate)  %></td>
-        <td>
-          <!-- This form allows me to change the item's price value. -->
-          <form action="/change" method="post">
-
-            <!-- This is the price input that will be updated -->
-            <input class = "setPrice" type="text" name="newPrice" autocomplete="off">
-
-            <!-- VERY IMPORTANT! This hidden input allows me to get the ID of corresponding item -->
-            <!-- We fetch the id with "req.body.specificItem" -->
-            <!-- TradeItemDisplayed is tradeItems that was found via "TradeItem.find({})" -->
-            <!-- Means each tradeItemDisplayed is one object in the database -->
-            <input type="hidden" name="specificItem" value="<%= tradeItemDisplayed._id %>">
-
-            <!-- Action happens when the submit button is pressed -->
-            <button class="btn" type="submit" name="submitButton">✔</button>
-          </form>
-        </td>
+        <td class= "table-data item-name"><%= tradeItemDisplayed.name %></td> <!-- This is the object's name -->
+        <td class="table-data cell" ><%= tradeItemDisplayed.profitRate.toFixed(2) %>%</td>
       </tr>
     <% }); %>
 
-    <!-- Adding new trade item -->
-    <!-- <div class="box">
-      <form class="" action="/" method="post">
-        <h5>Name:</h5>
-        <input type="text" name="newItemName" value="" autocomplete="off">
-        <h5>Custom ID:</h5>
-        <input type="text" name="newItemCustomID" value="">
-        <h5>Type:</h5>
-        <input type="text" name="newItemType" value="">
-        <h5>Rarity:</h5>
-        <input type="text" name="newItemRarity" value="">
-        <h5>Bundle:</h5>
-        <input type="text" name="newItemBundle" value="">
-        <h5>Price:</h5>
-        <input type="text" name="newItemPrice" value="">
-        <br>
-        <button class = "btn" type="submit" name="submitButton">Submit</button>
-      </form>
-    </div> -->
 
     </table>
     <%# This is for an example post request %>
 
-    <!-- <form action="/" method="post">
-      <h3>You can set a new horse here:</h3>
-      <input type="text" name="horseName" autocomplete="off">
-      <input type="text" name="horseAge" autocomplete="off">
-      <input type="text" name="horseSpecies" autocomplete="off">
-      <button class="btn btn-primary" type="submit" name="submitButton"> Add Horse </button>
-    </form> -->
-
   </div>
 
 
 
-  <div class="otherColumn col-lg-6 col-md-12 col-sm-12">
-
-    <div class="dropdown">
-      <button onclick="toggleTradeItems()" class="dropbtn">Trade item type</button>
-      <div id="tradeDropdown" class="dropdown-content">
-        <a href="/">All</a>
-        <a href="/foraging">Foraging</a>
-        <a href="/logging">Logging</a>
-        <a href="/mining">Mining</a>
-        <a href="/hunting">Hunting</a>
-        <a href="/fishing">Fishing</a>
-        <a href="/excavating">Excavating</a>
-      </div>
-    </div>
-
-    <div class="dropdown">
-      <button onclick="toggleBattleItems()" class="dropbtn">Battle item type</button>
-      <div id="battleDropdown" class="dropdown-content">
-        <a href="/">All</a>
-        <a href="/recovery">Recovery</a>
-        <a href="/offense">Offense</a>
-        <a href="/utility">Utility</a>
-        <a href="/buff">Buff</a>
-
-      </div>
-    </div>
-
-
-  </div>
 
 
 
