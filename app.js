@@ -204,7 +204,7 @@ function updateBattleItem(battleItem, requiredTradeItemsString, requiredTradeIte
 
 
 
-function calculateProfit(battleItem){ // This works properly, calculates the corresponding battle item's profit rate
+async function calculateProfit(battleItem){ // This works properly, calculates the corresponding battle item's profit rate
   BattleItem.find({name: battleItem}, function(err,foundItem){
 
     var battleItemSellingPrice = foundItem[0].price; // Battle Item's selling price
@@ -405,9 +405,9 @@ function calculateProfit(battleItem){ // This works properly, calculates the cor
 // This function is used for re-calculating related battle items' profit rate after changing a trade item's price
 // This function will be used when trade or battle item price change process. (Essentially updatePrice function)
 function calculateProfitAfterChangingPrice(foundTradeItem){ // foundTradeItem is basically the trade item whose price is changed.
-  BattleItem.find({requirements: foundTradeItem}, function(err, foundItem){ // Find all battle items related to the trade item whose price is changed
+ BattleItem.find({requirements: foundTradeItem}, async function(err, foundItem){ // Find all battle items related to the trade item whose price is changed
       for(var i=0; i< foundItem.length; i++){ // No need to be async
-          calculateProfit(foundItem[i].name);
+          await calculateProfit(foundItem[i].name);
       }
   });
 }
