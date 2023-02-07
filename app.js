@@ -77,7 +77,7 @@ const BattleItem = mongoose.model("BattleItem", battleItemSchema); // "battleIte
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  Functions
 // In order to update price for both main page and specific type pages
-function updatePrice(requestedItemID, changedPrice, selectedType, res){
+async function updatePrice(requestedItemID, changedPrice, selectedType, res){
   var isBattleItem = allBattleItemTypes.includes(selectedType);
   var isTradeItem = allTradeItemTypes.includes(selectedType);
 
@@ -102,12 +102,12 @@ function updatePrice(requestedItemID, changedPrice, selectedType, res){
               $set:{
                 lastUpdate: lastUpdate // setting the last update time
               }
-            }, {new: true}, function(err){
+            }, {new: true}, async function(err){
             if(!err){
               console.log("Last update date for "+result.name+" is up to date now.");
               console.log("---");
                // Calculate and set values of related battle items' profit rate after battle item's price change
-              calculateProfit(result.name);
+              await calculateProfit(result.name);
             }else{
               console.log(err);
             }
@@ -129,7 +129,7 @@ function updatePrice(requestedItemID, changedPrice, selectedType, res){
           price: changedPrice // Updates the price.
         }
       },
-      function(err, result) { // i couldn't make async await here, it just doesnt work properly for some reason
+      async function(err, result) { // i couldn't make async await here, it just doesnt work properly for some reason
         if (!err) {
           console.log("---");
           console.log(result.name + "'s price is changed to " + changedPrice);
@@ -141,12 +141,12 @@ function updatePrice(requestedItemID, changedPrice, selectedType, res){
               $set:{
                 lastUpdate: lastUpdate // setting the last update time
               }
-            }, {new: true}, function(err){
+            }, {new: true}, async function(err){
             if(!err){
               console.log("Last update date for "+result.name+" is up to date now.");
               console.log("---");
                // Calculate and set values of related battle items' profit rate after its required trade item's price
-              calculateProfitAfterChangingPrice(result.name);
+              await calculateProfitAfterChangingPrice(result.name);
             }else{
               console.log(err);
             }
