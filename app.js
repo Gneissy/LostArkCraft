@@ -215,7 +215,7 @@ async function calculateProfit(battleItem){ // This works properly, calculates t
 
       // The reason im doing it one by one is that i can't use for loop properly in this situation.
       const calculateProfitForIndex0 = async function(){
-        setTimeout(function(){
+        await setTimeout(function(){
           if(foundItem[0].requirements.length > 0){ // If requirement quantity is bigger than 0,
             TradeItem.find({name: foundItem[0].requirements[0]}, function (err, foundTradeItem){ // Find corresponding trade item
               var tradeItemPrice = foundTradeItem[0].price; // Trade Item's bundle price
@@ -244,7 +244,7 @@ async function calculateProfit(battleItem){ // This works properly, calculates t
       }
 
       const calculateProfitForIndex1 = async function(){
-        setTimeout(function(){
+        await setTimeout(function(){
           if(foundItem[0].requirements.length > 1){ // If requirement quantity is bigger than 1,
             TradeItem.find({name: foundItem[0].requirements[1]}, function (err, foundTradeItem){ // Find corresponding trade item
               var tradeItemPrice = foundTradeItem[0].price; // Trade Item's bundle price
@@ -273,7 +273,7 @@ async function calculateProfit(battleItem){ // This works properly, calculates t
       } // Required 50 ms setTimeout
 
       const calculateProfitForIndex2 = async function(){
-        setTimeout(function(){
+        await setTimeout(function(){
           if(foundItem[0].requirements.length > 2){ // If requirement quantity is bigger than 1,
             TradeItem.find({name: foundItem[0].requirements[2]}, function (err, foundTradeItem){ // Find corresponding trade item
               var tradeItemPrice = foundTradeItem[0].price; // Trade Item's bundle price
@@ -302,7 +302,7 @@ async function calculateProfit(battleItem){ // This works properly, calculates t
       } // Required 50 ms setTimeout
 
       const calculateProfitForIndex3 = async function(){
-        setTimeout(function(){
+        await setTimeout(function(){
           if(foundItem[0].requirements.length > 3){ // If requirement quantity is bigger than 1,
             TradeItem.find({name: foundItem[0].requirements[3]}, function (err, foundTradeItem){ // Find corresponding trade item
               var tradeItemPrice = foundTradeItem[0].price; // Trade Item's bundle price
@@ -331,7 +331,7 @@ async function calculateProfit(battleItem){ // This works properly, calculates t
       } // Required 50 ms setTimeout
 
       const calculateProfitForIndex4 = async function(){
-        setTimeout(function(){
+        await setTimeout(function(){
           if(foundItem[0].requirements.length > 4){ // If requirement quantity is bigger than 1,
             TradeItem.find({name: foundItem[0].requirements[4]}, function (err, foundTradeItem){ // Find corresponding trade item
               var tradeItemPrice = foundTradeItem[0].price; // Trade Item's bundle price
@@ -360,7 +360,7 @@ async function calculateProfit(battleItem){ // This works properly, calculates t
       } // Required 50 ms setTimeout
 
       const calculateProfitForIndex5 = async function(){
-        setTimeout(function(){
+        await setTimeout(function(){
           if(foundItem[0].requirements.length > 5){ // If requirement quantity is bigger than 1,
             TradeItem.find({name: foundItem[0].requirements[5]}, function (err, foundTradeItem){ // Find corresponding trade item
               var tradeItemPrice = foundTradeItem[0].price; // Trade Item's bundle price
