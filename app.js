@@ -388,8 +388,8 @@ async function calculateProfit(battleItem){ // This works properly, calculates t
         }, 1200);
       } // Required 50 ms setTimeout
 
-      function calculateOverallProfit(){ // This function lets me async execution
-        calculateProfitForIndex0()
+      async function calculateOverallProfit(){ // This function lets me async execution
+        await calculateProfitForIndex0()
         .then(calculateProfitForIndex1)
         .then(calculateProfitForIndex2)
         .then(calculateProfitForIndex3)
