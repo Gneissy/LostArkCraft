@@ -240,7 +240,7 @@ async function calculateProfit(battleItem){ // This works properly, calculates t
               }
              });
           }
-        }, 1);
+        }, 400);
       }
 
       const calculateProfitForIndex1 = async function(){
@@ -269,7 +269,7 @@ async function calculateProfit(battleItem){ // This works properly, calculates t
               }
              });
           }
-        }, 2);
+        }, 800);
       } // Required 50 ms setTimeout
 
       const calculateProfitForIndex2 = async function(){
@@ -298,7 +298,7 @@ async function calculateProfit(battleItem){ // This works properly, calculates t
               }
              });
           }
-        }, 3);
+        }, 1200);
       } // Required 50 ms setTimeout
 
       const calculateProfitForIndex3 = async function(){
@@ -327,7 +327,7 @@ async function calculateProfit(battleItem){ // This works properly, calculates t
               }
              });
           }
-        }, 4);
+        }, 1600);
       } // Required 50 ms setTimeout
 
       const calculateProfitForIndex4 = async function(){
@@ -356,7 +356,7 @@ async function calculateProfit(battleItem){ // This works properly, calculates t
               }
              });
           }
-        }, 5);
+        }, 2000);
       } // Required 50 ms setTimeout
 
       const calculateProfitForIndex5 = async function(){
@@ -385,7 +385,7 @@ async function calculateProfit(battleItem){ // This works properly, calculates t
               }
              });
           }
-        }, 6);
+        }, 2400);
       } // Required 50 ms setTimeout
 
       async function calculateOverallProfit(){ // This function lets me async execution
