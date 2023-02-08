@@ -205,7 +205,7 @@ function updateBattleItem(battleItem, requiredTradeItemsString, requiredTradeIte
 
 
 async function calculateProfit(battleItem){ // This works properly, calculates the corresponding battle item's profit rate
-  BattleItem.find({name: battleItem}, function(err,foundItem){
+  BattleItem.find({name: battleItem}, async function(err,foundItem){
 
     var battleItemSellingPrice = foundItem[0].price; // Battle Item's selling price
     var battleItemPerCraftCost = foundItem[0].perCraftCost; // Batle Item's crafting cost
@@ -240,7 +240,7 @@ async function calculateProfit(battleItem){ // This works properly, calculates t
               }
              });
           }
-        }, 200);
+        }, 1);
       }
 
       const calculateProfitForIndex1 = async function(){
@@ -269,7 +269,7 @@ async function calculateProfit(battleItem){ // This works properly, calculates t
               }
              });
           }
-        }, 400);
+        }, 2);
       } // Required 50 ms setTimeout
 
       const calculateProfitForIndex2 = async function(){
@@ -298,7 +298,7 @@ async function calculateProfit(battleItem){ // This works properly, calculates t
               }
              });
           }
-        }, 600);
+        }, 3);
       } // Required 50 ms setTimeout
 
       const calculateProfitForIndex3 = async function(){
@@ -327,7 +327,7 @@ async function calculateProfit(battleItem){ // This works properly, calculates t
               }
              });
           }
-        }, 800);
+        }, 4);
       } // Required 50 ms setTimeout
 
       const calculateProfitForIndex4 = async function(){
@@ -356,7 +356,7 @@ async function calculateProfit(battleItem){ // This works properly, calculates t
               }
              });
           }
-        }, 1000);
+        }, 5);
       } // Required 50 ms setTimeout
 
       const calculateProfitForIndex5 = async function(){
@@ -385,7 +385,7 @@ async function calculateProfit(battleItem){ // This works properly, calculates t
               }
              });
           }
-        }, 1200);
+        }, 6);
       } // Required 50 ms setTimeout
 
       async function calculateOverallProfit(){ // This function lets me async execution
@@ -397,7 +397,7 @@ async function calculateProfit(battleItem){ // This works properly, calculates t
         .then(calculateProfitForIndex5);
       }
 
-      calculateOverallProfit();
+      await calculateOverallProfit();
 });
 }
 
