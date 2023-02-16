@@ -1,55 +1,50 @@
 <%# Including header partial %>
 <%- include("partials/header"); -%>
 
-
 <div class="row">
   <div class="tradeItemsColumn col-lg-6 col-md-12 col-sm-12">
-    <table class = main-table>
-
-      <tr class = table-raw>
-        <td class = "table-data">img</td>
-        <td class= "table-data item-name">Item Name</td>
-        <td class="table-data cell" >Bundle</td>
-        <td class="table-data cell" >Price</td>
-        <td class="table-data cell" >Last Update:</td>
-        <td class="table-data cell" >Set new price:</td>
+    <table class=main-table>
+      <tr class=table-raw>
+        <td class="table-data">img</td>
+        <td class="table-data item-name">Item Name</td>
+        <td class="table-data cell">Bundle</td>
+        <td class="table-data cell">Price</td>
+        <td class="table-data cell">Last Update:</td>
+        <td class="table-data cell">Set new price:</td>
       </tr>
 
-    <% tradeItemDisplayed.slice().forEach(function(tradeItemDisplayed){ %> <!-- This allows us to loop all raws -->
-      <tr class= "table-raw rarity-<%= tradeItemDisplayed.rarity %>"> <!-- This includes background color correspoding to rarity -->
-        <td class = "table-data">
+      <% tradeItemDisplayed.slice().forEach(function(tradeItemDisplayed){ %> <!-- To loop all raws -->
+      <tr class="table-raw rarity-<%= tradeItemDisplayed.rarity %>"> <!-- Background color corresponding to rarity -->
+        <td class="table-data">
           <div class="img">
-            <img class = "item-image" src="images/<%= tradeItemDisplayed.name %>.png" alt="ex"> <!-- This allows me to assign images according to trade item name -->
+            <img class="item-image" src="images/<%= tradeItemDisplayed.name %>.png" alt="ex"> <!-- Assign images according to trade item name -->
           </div>
         </td>
-        <td class= "table-data item-name"><%= tradeItemDisplayed.name %></td> <!-- This is the object's name -->
-        <td class="table-data cell" ><%= tradeItemDisplayed.bundle %></td> <!-- This is the object's bundle value (10-100) -->
+        <td class="table-data item-name"><%= tradeItemDisplayed.name %></td> <!-- Object name -->
+        <td class="table-data cell"><%= tradeItemDisplayed.bundle %></td> <!-- Object's bundle quantity (10-100) -->
         <!-- This is the item's current price value. We are able to change it on the way. -->
-        <td class="table-data cell" ><%= tradeItemDisplayed.price %> <span><img class="gold-image" src="images/gold-image.png" alt="gold-image"></span></td>
+        <td class="table-data cell"><%= tradeItemDisplayed.price %> <span><img class="gold-image" src="images/gold-image.png" alt="gold-image"></span></td>
         <td class="table-data cell-lastUpdate"><%= date1.from(tradeItemDisplayed.lastUpdate)  %></td>
-
         <td>
-          <!-- This form allows me to change the item's price value. -->
-          <form id= "myForm" action="/<%= selectedType %>/change" method="post">
-
-            <!-- This is the price input that will be updated -->
-            <input class = "setPrice" type="text" name="newPrice" autocomplete="off">
-
+          <!-- Allows me to change the item's price value. -->
+          <form id="myForm" action="/<%= selectedType %>/change" method="post">
+            <!-- Price input that will be updated -->
+            <input class="setPrice" type="text" name="newPrice" autocomplete="off">
             <!-- VERY IMPORTANT! This hidden input allows me to get the ID of corresponding item -->
             <!-- We fetch the id with "req.body.specificItem" -->
             <!-- TradeItemDisplayed is tradeItems that was found via "TradeItem.find({})" -->
             <!-- Means each tradeItemDisplayed is one object in the database -->
             <input type="hidden" name="specificItem" value="<%= tradeItemDisplayed._id %>">
-
             <!-- Action happens when the submit button is pressed -->
             <button class="btn uniqueSubmitButton" type="submit" name="submitButton">✔</button>
           </form>
         </td>
       </tr>
-    <% }); %>
+      <% }); %>
+      
     </table>
-
   </div>
+
   <div class="customHome-buttons col-lg-6 col-md-12 col-sm-12">
     <div class="dropdown">
       <button onclick="toggleTradeItems()" class="dropbtn">Select trade item type</button>

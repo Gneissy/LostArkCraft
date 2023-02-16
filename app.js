@@ -23,8 +23,6 @@ const connectDB = async function(){
     process.exit(1);
   }
 }
-
-
 mongoose.connect(process.env.MONGOSERVER); // Connecting Mongo Database, Collection & Mongo Atlas
 
 // Creating a DB Schema
@@ -40,7 +38,6 @@ const tradeItemSchema = new mongoose.Schema({ // This allows us to record posts 
 // Creating the Collection
 const TradeItem = mongoose.model("TradeItem", tradeItemSchema); // "tradeItems" collection is created.
 
-
 // Default parameters & variables
 const requiredTradeItems = [];
 const selectedType = "";
@@ -50,8 +47,6 @@ const allBattleItemTypes = ["recovery", "offense", "utility", "buff", "cooking",
 // Temporary parameters & variables (needed for creating new battle items)
 const requiredTradeItemsString = ["Oreha Relic", "Rare Relic", "Ancient Relic"];
 const requiredTradeItemsQuantity = ["16","29","94"];
-
-
 
 // Creating another DB Schema which is for Battle Items
 const battleItemSchema = new mongoose.Schema({
@@ -68,14 +63,13 @@ const battleItemSchema = new mongoose.Schema({
   perCraftTimeSecond: Number, // 25
   profitRate: Number
 });
+
 // Creating the other collection which is BattleItems
 const BattleItem = mongoose.model("BattleItem", battleItemSchema); // "battleItems" collection is created
 
 
 
-
-
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  Functions
+// Functions
 // In order to update price for both main page and specific type pages
 async function updatePrice(requestedItemID, changedPrice, selectedType, res){
   var isBattleItem = allBattleItemTypes.includes(selectedType);
@@ -178,10 +172,9 @@ function createNewBattleItem(name, customID, type, rarity, price, perCraftCost, 
   });
 }
 
-
 // temp
 // Updating existing battle item's requirements
-function updateBattleItem(battleItem, requiredTradeItemsString, requiredTradeItemsQuantity){ // i is how many types of material required
+function updateBattleItem(battleItem, requiredTradeItemsString, requiredTradeItemsQuantity){ // last 2 parameters are hardcoded at the beginning of this file
     BattleItem.findOneAndUpdate({name:battleItem},
       {
         $set:
@@ -194,14 +187,9 @@ function updateBattleItem(battleItem, requiredTradeItemsString, requiredTradeIte
     });
   }
 
+
   // createNewBattleItem("Superior Oreha Fusion Material(Excavating)", 40, "special", "epic", 22, 250, 20, 3600);
   // updateBattleItem("Superior Oreha Fusion Material(Excavating)", requiredTradeItemsString, requiredTradeItemsQuantity);
-
-
-
-
-
-
 
 
 async function calculateProfit(battleItem){ // This works properly, calculates the corresponding battle item's profit rate
@@ -212,22 +200,24 @@ async function calculateProfit(battleItem){ // This works properly, calculates t
     var battleItemPerCraftQuantity = foundItem[0].perCraftQuantity; // How many craft is supplied per craft process
     var battleItemMarketFee = Math.ceil(battleItemSellingPrice/20); // Fee price per Battle Item
     var allTradeItemsCost = 0;
-
-      // The reason im doing it one by one is that i can't use for loop properly in this situation.
+      // Only first and second calculateProfitForIndex constants will be commented
+      // The reason im doing it one by one is that i can't use "for" loop properly in this Mongoose situation.
       const calculateProfitForIndex0 = async function(){
         await setTimeout(async function(){
           if(foundItem[0].requirements.length > 0){ // If requirement quantity is bigger than 0,
               TradeItem.find({name: foundItem[0].requirements[0]}, async function (err, foundTradeItem){ // Find corresponding trade item
               var tradeItemPrice = foundTradeItem[0].price; // Trade Item's bundle price
               var tradeItemBundle = foundTradeItem[0].bundle; // Trade Item's bundle quantity (10 or 100)
-              var tradeItemRequirementQuantity = foundItem[0].requirementQuantities[0]; // How many of them we need
+              var tradeItemRequirementQuantity = foundItem[0].requirementQuantities[0]; // How many of them we need (index 0 of requirementQuantities)
 
-              var tradeItemCost = (tradeItemPrice / tradeItemBundle) * tradeItemRequirementQuantity; // Calculation of the cost of trade item
+              var tradeItemCost = (tradeItemPrice / tradeItemBundle) * tradeItemRequirementQuantity; // Calculation method of the cost of a trade item
               allTradeItemsCost += tradeItemCost; // Adding the sum of all trade items
-              // console.log(allTradeItemsCost);
-              if (foundItem[0].requirements.length == 1){
-                var allCraftingCost = ((allTradeItemsCost + battleItemPerCraftCost) / battleItemPerCraftQuantity) + battleItemMarketFee;
-                var profitRate = (battleItemSellingPrice / allCraftingCost) * 100;
+              // console.log(allTradeItemsCost); // Control purposes
+
+              if (foundItem[0].requirements.length == 1){ // This finishes the loop, calculates profit rate and updates if there is only 1 requirement:
+                var allCraftingCost = ((allTradeItemsCost + battleItemPerCraftCost) / battleItemPerCraftQuantity) + battleItemMarketFee; // Calculation method of all crafting cost
+                var profitRate = (battleItemSellingPrice / allCraftingCost) * 100; // Calculation method of profit rate
+                // Updating battle item's profit rate:
                 BattleItem.findOneAndUpdate({name:battleItem},
                   {
                     $set:
@@ -246,15 +236,15 @@ async function calculateProfit(battleItem){ // This works properly, calculates t
       const calculateProfitForIndex1 = async function(){
         await setTimeout(async function(){
           if(foundItem[0].requirements.length > 1){ // If requirement quantity is bigger than 1,
-            TradeItem.find({name: foundItem[0].requirements[1]}, async function (err, foundTradeItem){ // Find corresponding trade item
-              var tradeItemPrice = foundTradeItem[0].price; // Trade Item's bundle price
-              var tradeItemBundle = foundTradeItem[0].bundle; // Trade Item's bundle quantity (10 or 100)
-              var tradeItemRequirementQuantity = foundItem[0].requirementQuantities[1]; // How many of them we need
+            TradeItem.find({name: foundItem[0].requirements[1]}, async function (err, foundTradeItem){
+              var tradeItemPrice = foundTradeItem[0].price;
+              var tradeItemBundle = foundTradeItem[0].bundle;
+              var tradeItemRequirementQuantity = foundItem[0].requirementQuantities[1]; // How many of them we need (index 1 of requirementQuantities)
 
-              var tradeItemCost = (tradeItemPrice / tradeItemBundle) * tradeItemRequirementQuantity; // Calculation of the cost of trade item
-              allTradeItemsCost += tradeItemCost; // Adding the sum of all trade items
+              var tradeItemCost = (tradeItemPrice / tradeItemBundle) * tradeItemRequirementQuantity;
+              allTradeItemsCost += tradeItemCost;
               // console.log(allTradeItemsCost);
-              if (foundItem[0].requirements.length == 2){
+              if (foundItem[0].requirements.length == 2){ // This finishes the loop, calculates profit rate and updates if there is 2 requirement:
                 var allCraftingCost = ((allTradeItemsCost + battleItemPerCraftCost) / battleItemPerCraftQuantity) + battleItemMarketFee;
                 var profitRate = (battleItemSellingPrice / allCraftingCost) * 100;
                 BattleItem.findOneAndUpdate({name:battleItem},
@@ -274,14 +264,14 @@ async function calculateProfit(battleItem){ // This works properly, calculates t
 
       const calculateProfitForIndex2 = async function(){
         await setTimeout(async function(){
-          if(foundItem[0].requirements.length > 2){ // If requirement quantity is bigger than 1,
-            TradeItem.find({name: foundItem[0].requirements[2]}, async function (err, foundTradeItem){ // Find corresponding trade item
-              var tradeItemPrice = foundTradeItem[0].price; // Trade Item's bundle price
-              var tradeItemBundle = foundTradeItem[0].bundle; // Trade Item's bundle quantity (10 or 100)
-              var tradeItemRequirementQuantity = foundItem[0].requirementQuantities[2]; // How many of them we need
+          if(foundItem[0].requirements.length > 2){
+            TradeItem.find({name: foundItem[0].requirements[2]}, async function (err, foundTradeItem){
+              var tradeItemPrice = foundTradeItem[0].price;
+              var tradeItemBundle = foundTradeItem[0].bundle;
+              var tradeItemRequirementQuantity = foundItem[0].requirementQuantities[2];
 
-              var tradeItemCost = (tradeItemPrice / tradeItemBundle) * tradeItemRequirementQuantity; // Calculation of the cost of trade item
-              allTradeItemsCost += tradeItemCost; // Adding the sum of all trade items
+              var tradeItemCost = (tradeItemPrice / tradeItemBundle) * tradeItemRequirementQuantity;
+              allTradeItemsCost += tradeItemCost;
               // console.log(allTradeItemsCost);
               if (foundItem[0].requirements.length == 3){
                 var allCraftingCost = ((allTradeItemsCost + battleItemPerCraftCost) / battleItemPerCraftQuantity) + battleItemMarketFee;
@@ -303,14 +293,14 @@ async function calculateProfit(battleItem){ // This works properly, calculates t
 
       const calculateProfitForIndex3 = async function(){
         await setTimeout(async function(){
-          if(foundItem[0].requirements.length > 3){ // If requirement quantity is bigger than 1,
-            TradeItem.find({name: foundItem[0].requirements[3]}, async function (err, foundTradeItem){ // Find corresponding trade item
-              var tradeItemPrice = foundTradeItem[0].price; // Trade Item's bundle price
-              var tradeItemBundle = foundTradeItem[0].bundle; // Trade Item's bundle quantity (10 or 100)
-              var tradeItemRequirementQuantity = foundItem[0].requirementQuantities[3]; // How many of them we need
+          if(foundItem[0].requirements.length > 3){
+            TradeItem.find({name: foundItem[0].requirements[3]}, async function (err, foundTradeItem){
+              var tradeItemPrice = foundTradeItem[0].price;
+              var tradeItemBundle = foundTradeItem[0].bundle;
+              var tradeItemRequirementQuantity = foundItem[0].requirementQuantities[3];
 
-              var tradeItemCost = (tradeItemPrice / tradeItemBundle) * tradeItemRequirementQuantity; // Calculation of the cost of trade item
-              allTradeItemsCost += tradeItemCost; // Adding the sum of all trade items
+              var tradeItemCost = (tradeItemPrice / tradeItemBundle) * tradeItemRequirementQuantity;
+              allTradeItemsCost += tradeItemCost;
               // console.log(allTradeItemsCost);
               if (foundItem[0].requirements.length == 4){
                 var allCraftingCost = ((allTradeItemsCost + battleItemPerCraftCost) / battleItemPerCraftQuantity) + battleItemMarketFee;
@@ -332,14 +322,14 @@ async function calculateProfit(battleItem){ // This works properly, calculates t
 
       const calculateProfitForIndex4 = async function(){
         await setTimeout(async function(){
-          if(foundItem[0].requirements.length > 4){ // If requirement quantity is bigger than 1,
-            TradeItem.find({name: foundItem[0].requirements[4]}, async function (err, foundTradeItem){ // Find corresponding trade item
-              var tradeItemPrice = foundTradeItem[0].price; // Trade Item's bundle price
-              var tradeItemBundle = foundTradeItem[0].bundle; // Trade Item's bundle quantity (10 or 100)
-              var tradeItemRequirementQuantity = foundItem[0].requirementQuantities[4]; // How many of them we need
+          if(foundItem[0].requirements.length > 4){
+            TradeItem.find({name: foundItem[0].requirements[4]}, async function (err, foundTradeItem){
+              var tradeItemPrice = foundTradeItem[0].price;
+              var tradeItemBundle = foundTradeItem[0].bundle;
+              var tradeItemRequirementQuantity = foundItem[0].requirementQuantities[4];
 
-              var tradeItemCost = (tradeItemPrice / tradeItemBundle) * tradeItemRequirementQuantity; // Calculation of the cost of trade item
-              allTradeItemsCost += tradeItemCost; // Adding the sum of all trade items
+              var tradeItemCost = (tradeItemPrice / tradeItemBundle) * tradeItemRequirementQuantity;
+              allTradeItemsCost += tradeItemCost;
               // console.log(allTradeItemsCost);
               if (foundItem[0].requirements.length == 5){
                 var allCraftingCost = ((allTradeItemsCost + battleItemPerCraftCost) / battleItemPerCraftQuantity) + battleItemMarketFee;
@@ -361,14 +351,14 @@ async function calculateProfit(battleItem){ // This works properly, calculates t
 
       const calculateProfitForIndex5 = async function(){
         await setTimeout(async function(){
-          if(foundItem[0].requirements.length > 5){ // If requirement quantity is bigger than 1,
-            TradeItem.find({name: foundItem[0].requirements[5]}, async function (err, foundTradeItem){ // Find corresponding trade item
-              var tradeItemPrice = foundTradeItem[0].price; // Trade Item's bundle price
-              var tradeItemBundle = foundTradeItem[0].bundle; // Trade Item's bundle quantity (10 or 100)
-              var tradeItemRequirementQuantity = foundItem[0].requirementQuantities[5]; // How many of them we need
+          if(foundItem[0].requirements.length > 5){
+            TradeItem.find({name: foundItem[0].requirements[5]}, async function (err, foundTradeItem){
+              var tradeItemPrice = foundTradeItem[0].price;
+              var tradeItemBundle = foundTradeItem[0].bundle;
+              var tradeItemRequirementQuantity = foundItem[0].requirementQuantities[5];
 
-              var tradeItemCost = (tradeItemPrice / tradeItemBundle) * tradeItemRequirementQuantity; // Calculation of the cost of trade item
-              allTradeItemsCost += tradeItemCost; // Adding the sum of all trade items
+              var tradeItemCost = (tradeItemPrice / tradeItemBundle) * tradeItemRequirementQuantity;
+              allTradeItemsCost += tradeItemCost;
               // console.log(allTradeItemsCost);
               if (foundItem[0].requirements.length == 6){
                 var allCraftingCost = ((allTradeItemsCost + battleItemPerCraftCost) / battleItemPerCraftQuantity) + battleItemMarketFee;
@@ -388,7 +378,8 @@ async function calculateProfit(battleItem){ // This works properly, calculates t
         }, 2400);
       }
 
-      async function calculateOverallProfit(){ // This function lets me async execution of calculation method
+      // This function lets me async execution of calculation method
+      async function calculateOverallProfit(){
         await calculateProfitForIndex0()
         .then(calculateProfitForIndex1)
         .then(calculateProfitForIndex2)
@@ -413,24 +404,22 @@ async function calculateProfitAfterChangingPrice(foundTradeItem){ // foundTradeI
   });
 }
 
-
 function calculateEfficiency(){
   // Here will be the same calculateProfit() with addition of time parameter
 }
 
-
+// to avoid typing the following code everywhere, this function is a shortcut
 async function setProfitValue(battleItem, profitRate){
   await BattleItem.findOneAndUpdate({name: battleItem}, {$set:{profitRate: profitRate}}, {new: true}, function(err, foundObject){console.log(foundObject+"'s profit rate is updated.");});
 }
 
 
 
-
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  Get requests
+// Get requests
 app.get("/", function(req, res) { // Home Page as home.ejs
   date1 = dayjs(); // to get exact "now" when client is entered the site
   BattleItem
-    .find({}, function(err, battleItems) { // Find Horse objects having "" properties (all)
+    .find({}, function(err, battleItems) { // Find all Battle Item objects
       res.render("home", { // send "home.ejs"
         tradeItemDisplayed: battleItems, // "tradeItemDisplayed" in home.ejs is "tradeItems" in app.js find function
         date1: date1 // to show relative last update time
@@ -442,17 +431,17 @@ app.get("/", function(req, res) { // Home Page as home.ejs
     .limit(8) // Limits that only 8 return will be happen instead all.
 });
 
-app.get("/profit", function(req, res) { // Home Page as home.ejs
+app.get("/profit", function(req, res) { // Profit Page as profit.ejs
   date1 = dayjs(); // to get exact "now" when client is entered the site
   BattleItem
-    .find({}, function(err, battleItems) { // Find Horse objects having "" properties (all)
-      res.render("profit", { // send "home.ejs"
-        tradeItemDisplayed: battleItems, // "tradeItemDisplayed" in home.ejs is "tradeItems" in app.js find function
+    .find({}, function(err, battleItems) { // Find all Battle Item objects
+      res.render("profit", { // send "profit.ejs"
+        tradeItemDisplayed: battleItems, // "tradeItemDisplayed" in profit.ejs is "tradeItems" in app.js find function
         date1: date1 // to show relative last update time
     });
   })
     .sort({
-      profitRate: -1 // This sorts values descendantly according to profitRate (The highest profit rate first)
+      profitRate: -1 // This sorts values descendingly according to profitRate (The highest profit rate first)
     });
 });
 
@@ -504,8 +493,9 @@ app.get("/:selectedType", function(req, res) { // Be selected with dropdown menu
 
 
 
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Post Requests
-app.post("/", function(req, res) { // Post request (when someone pressed submit button)
+// Post Requests
+// temp
+app.post("/", function(req, res) {
   const newTradeItem = new TradeItem({ // Creating a new object
     name: req.body.newItemName,
     customID: req.body.newItemCustomID,
@@ -523,6 +513,7 @@ app.post("/", function(req, res) { // Post request (when someone pressed submit 
   });
 });
 
+// temp
 app.post("/change", async function(req, res) { // Changing the price of the specific item
   const requestedItemID = req.body.specificItem; // Gets the id of corresponding item (via hidden input's value)
   const changedPrice = req.body.newPrice; // Gets the price client has entered
@@ -531,11 +522,12 @@ app.post("/change", async function(req, res) { // Changing the price of the spec
 });
 
 app.post("/:selectedType/change", async function(req, res) { // Changing the price of the specific item
-  const selectedType = req.params.selectedType; // Whatever is selected
+  const selectedType = req.params.selectedType; // Whatever is selected type
   const requestedItemID = req.body.specificItem; // Gets the id of corresponding item (via hidden input's value)
   const changedPrice = req.body.newPrice; // Gets the price client has entered
   await updatePrice(requestedItemID, changedPrice, selectedType, res); // Updates the new price
 });
+
 
 
 // Running the server

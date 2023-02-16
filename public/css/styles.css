@@ -1,17 +1,13 @@
-/*______________________________________________________________Tag Selectors*/
+/* Tag Selectors */
 body{
 margin: 0;
 background-color: #0d1117;
 }
-
-.hidden{
-  display: none;
+h5{
+  color:white;
 }
-.new-div:hover + .hidden{
-  display: inline-block;
-  position: absolute;
-  z-index: -1;
-  color: red;
+p strong{
+  color: #ffdead;
 }
 
 
@@ -39,13 +35,10 @@ background-color: #0d1117;
   display: flex;
   align-content: center;
 }
-h5{
-  color:white;
-}
-p strong{
-  color: #ffdead;
-}
 
+
+
+/* Dropdown related */
 /* Dropdown Button */
 .dropbtn {
   background-color: transparent;
@@ -56,19 +49,16 @@ p strong{
   font-size: 16px;
   cursor: pointer;
 }
-
 /* Dropdown button on hover & focus */
 .dropbtn:hover, .dropbtn:focus {
   background-color: #11999E;
 }
-
 /* The container <div> - needed to position the dropdown content */
 .dropdown {
   position: relative;
   display: inline-block;
   margin: 0 15px;
 }
-
 /* Dropdown Content (Hidden by Default) */
 .dropdown-content {
   display: none;
@@ -78,7 +68,6 @@ p strong{
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 1;
 }
-
 /* Links inside the dropdown */
 .dropdown-content a {
   color: black;
@@ -86,31 +75,14 @@ p strong{
   text-decoration: none;
   display: block;
 }
-
 /* Change color of dropdown links on hover */
 .dropdown-content a:hover {background-color: #ffdead;}
 .dropdown-container{
   text-align: center;
 }
-
 /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
 .show {display:block;}
 
-/*____________________________________________________________Class Selectors*/
-/* Buttons */
-.btn{
-  margin: 0.5% 0;
-  height: 50px;
-  width: 50px;
-  display: inline-block;
-  background-size: cover;
-  font-family: Montserrat, serif;
-  font-weight: 900;
-  border-radius: 10px;
-  border: 0.5px solid #0d1117;
-  background-color: #0d1117;
-  color:green;
-}
 
 
 /* Navigation Bar */
@@ -138,14 +110,21 @@ p strong{
   text-align: center;
 }
 
+
+
 /* General */
-.setPrice{
-  width: 120px;
-  background-color: #1B2B33;
-  color: white;
-}
-.newPriceBtn:hover{
+.btn{
+  margin: 0.5% 0;
+  height: 50px;
+  width: 50px;
+  display: inline-block;
+  background-size: cover;
+  font-family: Montserrat, serif;
+  font-weight: 900;
+  border-radius: 10px;
+  border: 0.5px solid #0d1117;
   background-color: #0d1117;
+  color:green;
 }
 .box{
   display: inline-block;
@@ -174,6 +153,15 @@ p strong{
 .enterance-info-component{
   margin: 3% 0;
 }
+.gold-image{
+  width: 20px;
+}
+.item-image{
+  width: 70px;
+}
+.newPriceBtn:hover{
+  background-color: #0d1117;
+}
 .rarity-normal{
   background: linear-gradient(315deg, #0d1117 50%, #303030 90%);
 }
@@ -189,16 +177,17 @@ p strong{
 .rarity-legendary{
   background: linear-gradient(315deg, #0d1117 50%, #a86101 90%);
 }
-.gold-image{
-  width: 20px;
+.setPrice{
+  width: 120px;
+  background-color: #1B2B33;
+  color: white;
 }
 .tradeItemsColumn{
   text-align: center;
   margin-top: 1%;
 }
-.item-image{
-  width: 70px;
-}
+
+
 
 /* Bottom container */
 .bottom-container {
@@ -236,6 +225,8 @@ p strong{
   margin-top: 5%;
 }
 
+
+
 /* Load screen */
 .loader-wrapper {
   width: 100%;
@@ -263,7 +254,6 @@ p strong{
   background-color: #fff;
   animation: loader-inner 2s infinite ease-in;
 }
-
 @keyframes loader {
   0% { transform: rotate(0deg);}
   25% { transform: rotate(180deg);}
@@ -271,7 +261,6 @@ p strong{
   75% { transform: rotate(360deg);}
   100% { transform: rotate(360deg);}
 }
-
 @keyframes loader-inner {
   0% { height: 0%;}
   25% { height: 0%;}
@@ -304,7 +293,6 @@ p strong{
   background-color: #fff;
   animation: loader-inner 2s infinite ease-in;
 }
-
 @keyframes loader {
   0% { transform: rotate(0deg);}
   25% { transform: rotate(180deg);}
@@ -312,7 +300,6 @@ p strong{
   75% { transform: rotate(360deg);}
   100% { transform: rotate(360deg);}
 }
-
 @keyframes loader-inner {
   0% { height: 0%;}
   25% { height: 0%;}
@@ -320,3 +307,16 @@ p strong{
   75% { height: 100%;}
   100% { height: 0%;}
 }
+
+
+
+/* temp */
+/* .hidden{
+  display: none;
+}
+.new-div:hover + .hidden{
+  display: inline-block;
+  position: absolute;
+  z-index: -1;
+  color: red;
+} */

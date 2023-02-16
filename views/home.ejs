@@ -4,97 +4,79 @@
 <!-- <div class="new-div"> Hover Over Me! </div>
 <div class="hidden"> I am shown when someone hovers the div above.</div> -->
 
-
-
 <div class="row">
-
-    <div class="col-lg-6 col-md-12 col-sm-12">
-
-      <div class= "enterance-div">
-        <div class="container enterance-info-component">
-          <h1 class = "enterance-title">What is this app all about?</h1>
-            <p class = "enterance-content">This calculation site is used in order to maximize the crafting profit in the game <strong>LOST ARK</strong>.</p>
-            <p class = "enterance-content enterance-content-detail"><strong>Trade Items</strong> are materials that is being required to craft Battle Items.</p>
-            <p class = "enterance-content enterance-content-detail"><strong>Battle Items</strong> are consumables that will be sold after being crafted.</p>
-            <p class = "enterance-content">The whole point is to track both Trade and Battle items' prices in order to calculate <strong>the most profitable</strong> battle item that can be crafted. The idea here is to create a <strong>public calculation</strong> form that doesn't require everyone to do it all over again.</p>
-        </div>
-        <div class="container enterance-info-component">
-          <h1 class = "enterance-title">How does this site work?</h1>
-          <p class = "enterance-content">Profit rates are always updated in response to <strong>price adjustments</strong> for trade or battle items. The app performs all calculations automatically; <strong>all you have to do is enter prices</strong> that are current at the time.</p>
-          <p class = "enterance-content">To use this app efficiently, check last update time of items and see the highest <strong>Profit Rate</strong> in battle items. It is recommended to update prices if last update is more than 6 hours.</p> -->
-        </div>
-        <div class="container enterance-info-component">
-          <h1 class = "enterance-title">How to use the app?</h1>
-          <p class = "enterance-content"><strong>All you have to do is enter prices</strong> that are current at the time.</p>
-          <p class = "enterance-content">You can start changing prices here:</p>
-          <div class="dropdown-container">
-            <div class="dropdown">
-              <button onclick="toggleTradeItems()" class="dropbtn">Trade item type</button>
-              <div id="tradeDropdown" class="dropdown-content">
-                <a href="/foraging">Foraging</a>
-                <a href="/logging">Logging</a>
-                <a href="/mining">Mining</a>
-                <a href="/hunting">Hunting</a>
-                <a href="/fishing">Fishing</a>
-                <a href="/excavating">Excavating</a>
-              </div>
+  <div class="col-lg-6 col-md-12 col-sm-12">
+    <div class="enterance-div">
+      <div class="container enterance-info-component">
+        <h1 class="enterance-title">What is this app all about?</h1>
+        <p class="enterance-content">This calculation site is used in order to maximize the crafting profit in the game <strong>LOST ARK</strong>.</p>
+        <p class="enterance-content enterance-content-detail"><strong>Trade Items</strong> are materials that is being required to craft Battle Items.</p>
+        <p class="enterance-content enterance-content-detail"><strong>Battle Items</strong> are consumables that will be sold after being crafted.</p>
+        <p class="enterance-content">The whole point is to track both Trade and Battle items' prices in order to calculate <strong>the most profitable</strong> battle item that can be crafted. The idea here is to create a <strong>public
+            calculation</strong> form that doesn't require everyone to do it all over again.</p>
+      </div>
+      <div class="container enterance-info-component">
+        <h1 class="enterance-title">How does this site work?</h1>
+        <p class="enterance-content">Profit rates are always updated in response to <strong>price adjustments</strong> for trade or battle items. The app performs all calculations automatically; <strong>all you have to do is enter prices</strong>
+          that are current at the time.</p>
+        <p class="enterance-content">To use this app efficiently, check last update time of items and see the highest <strong>Profit Rate</strong> in battle items. It is recommended to update prices if last update is more than 6 hours.</p> -->
+      </div>
+      <div class="container enterance-info-component">
+        <h1 class="enterance-title">How to use the app?</h1>
+        <p class="enterance-content"><strong>All you have to do is enter prices</strong> that are current at the time.</p>
+        <p class="enterance-content">You can start changing prices here:</p>
+        <div class="dropdown-container">
+          <div class="dropdown">
+            <button onclick="toggleTradeItems()" class="dropbtn">Trade item type</button>
+            <div id="tradeDropdown" class="dropdown-content">
+              <a href="/foraging">Foraging</a>
+              <a href="/logging">Logging</a>
+              <a href="/mining">Mining</a>
+              <a href="/hunting">Hunting</a>
+              <a href="/fishing">Fishing</a>
+              <a href="/excavating">Excavating</a>
             </div>
-
-            <div class="dropdown">
-              <button onclick="toggleBattleItems()" class="dropbtn">Battle item type</button>
-              <div id="battleDropdown" class="dropdown-content">
-                <a href="/recovery">Recovery</a>
-                <a href="/offense">Offense</a>
-                <a href="/utility">Utility</a>
-                <a href="/buff">Buff</a>
-                <a href="/cooking">Cooking</a>
-                <a href="/special">Special</a>
-
-              </div>
+          </div>
+          <div class="dropdown">
+            <button onclick="toggleBattleItems()" class="dropbtn">Battle item type</button>
+            <div id="battleDropdown" class="dropdown-content">
+              <a href="/recovery">Recovery</a>
+              <a href="/offense">Offense</a>
+              <a href="/utility">Utility</a>
+              <a href="/buff">Buff</a>
+              <a href="/cooking">Cooking</a>
+              <a href="/special">Special</a>
             </div>
-
+          </div>
         </div>
       </div>
-
-</div>
-
     </div>
-
-
-
-
-  <div class="tradeItemsColumn col-lg-6 col-md-12 col-sm-12">
-    <h1 class = "enterance-title">Current Best Profit Rates</h1>
-
-    <table class = "main-table">
-
-      <tr class = table-raw>
-        <td class = "table-data">img</td>
-        <td class= "table-data item-name">Item Name</td>
-        <td class=" table-data cell" >Profit Rate</td>
-
-      </tr>
-
-    <% tradeItemDisplayed.slice().forEach(function(tradeItemDisplayed){ %> <!-- This allows us to loop all raws -->
-      <tr class= "table-raw rarity-<%= tradeItemDisplayed.rarity %>"> <!-- This includes background color correspoding to rarity -->
-        <td class = "table-data">
-          <div class="img">
-            <img class = "item-image" src="images/<%= tradeItemDisplayed.name %>.png" alt="ex"> <!-- This allows me to assign images according to trade item name -->
-          </div>
-        </td>
-        <td class= "table-data item-name"><%= tradeItemDisplayed.name %></td> <!-- This is the object's name -->
-        <td class="table-data cell" ><%= tradeItemDisplayed.profitRate.toFixed(2) %>%</td>
-      </tr>
-    <% }); %>
-
-
-    </table>
-    <%# This is for an example post request %>
-
   </div>
 
-</div>
+  <div class="tradeItemsColumn col-lg-6 col-md-12 col-sm-12">
+    <h1 class="enterance-title">Current Best Profit Rates</h1>
+    <table class="main-table">
+      <tr class=table-raw>
+        <td class="table-data">img</td>
+        <td class="table-data item-name">Item Name</td>
+        <td class=" table-data cell">Profit Rate</td>
+      </tr>
 
+      <% tradeItemDisplayed.slice().forEach(function(tradeItemDisplayed){ %> <!-- To loop all raws -->
+      <tr class="table-raw rarity-<%= tradeItemDisplayed.rarity %>"> <!-- Background color corresponding to rarity -->
+        <td class="table-data">
+          <div class="img">
+            <img class="item-image" src="images/<%= tradeItemDisplayed.name %>.png" alt="ex"> <!-- To assign images according to trade item name -->
+          </div>
+        </td>
+        <td class="table-data item-name"><%= tradeItemDisplayed.name %></td> <!-- Object name -->
+        <td class="table-data cell"><%= tradeItemDisplayed.profitRate.toFixed(2) %>%</td> <!-- Displaying 2 digits after decimal -->
+      </tr>
+      <% }); %>
+
+    </table>
+  </div>
+</div>
 
 <%# Including footer partial %>
 <%- include("partials/footer"); -%>

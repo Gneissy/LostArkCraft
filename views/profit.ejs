@@ -3,44 +3,31 @@
 
 
 <div class="row">
-
   <div class="tradeItemsColumn">
-    <h1 class= "enterance-title enterance-title-profitAll">Here are all profit rates of Battle Items, descendingly.</h1>
-
-    <table class = "main-table">
-
-      <tr class = table-raw>
-        <td class = "table-data">img</td>
-        <td class= "table-data item-name">Item Name</td>
-        <td class=" table-data cell" >Profit Rate</td>
-
+    <h1 class="enterance-title enterance-title-profitAll">Here are all profit rates of Battle Items, descendingly.</h1>
+    <table class="main-table">
+      <tr class=table-raw>
+        <td class="table-data">img</td>
+        <td class="table-data item-name">Item Name</td>
+        <td class=" table-data cell">Profit Rate</td>
       </tr>
 
-    <% tradeItemDisplayed.slice().forEach(function(tradeItemDisplayed){ %> <!-- This allows us to loop all raws -->
-      <tr class= "table-raw rarity-<%= tradeItemDisplayed.rarity %>"> <!-- This includes background color correspoding to rarity -->
-        <td class = "table-data">
+      <% tradeItemDisplayed.slice().forEach(function(tradeItemDisplayed){ %> <!-- To loop all raws -->
+      <tr class="table-raw rarity-<%= tradeItemDisplayed.rarity %>"> <!-- Background color correspoding to rarity -->
+        <td class="table-data">
           <div class="img">
-            <img class = "item-image" src="images/<%= tradeItemDisplayed.name %>.png" alt="ex"> <!-- This allows me to assign images according to trade item name -->
+            <img class="item-image" src="images/<%= tradeItemDisplayed.name %>.png" alt="ex"> <!-- To assign images according to trade item name -->
           </div>
         </td>
-        <td class= "table-data item-name"><%= tradeItemDisplayed.name %></td> <!-- This is the object's name -->
-        <td class="table-data cell" ><%= tradeItemDisplayed.profitRate.toFixed(2) %>%</td>
+        <td class="table-data item-name"><%= tradeItemDisplayed.name %></td> <!-- Object name -->
+        <td class="table-data cell"><%= tradeItemDisplayed.profitRate.toFixed(2) %>%</td> <!-- Displaying 2 digits after decimal -->
       </tr>
-    <% }); %>
-
+      <% }); %>
 
     </table>
-    <%# This is for an example post request %>
 
   </div>
 </div>
-
-
-
-
-
-
-
 
 <%# Including footer partial %>
 <%- include("partials/footer"); -%>
