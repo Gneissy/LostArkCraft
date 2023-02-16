@@ -45,11 +45,11 @@ const TradeItem = mongoose.model("TradeItem", tradeItemSchema); // "tradeItems" 
 const requiredTradeItems = [];
 const selectedType = "";
 const allTradeItemTypes = ["foraging", "logging", "mining", "hunting", "fishing", "excavating"];
-const allBattleItemTypes = ["recovery", "offense", "utility", "buff"];
+const allBattleItemTypes = ["recovery", "offense", "utility", "buff", "cooking", "special"];
 
 // Temporary parameters & variables (needed for creating new battle items)
-const requiredTradeItemsString = ["Exquisite Mushroom", "Fresh Mushroom", "Sturdy Timber", "Rare Relic", "Crude Mushroom"];
-const requiredTradeItemsQuantity = ["5","20","2","4","40"];
+const requiredTradeItemsString = ["Oreha Relic", "Rare Relic", "Ancient Relic"];
+const requiredTradeItemsQuantity = ["16","29","94"];
 
 
 
@@ -194,8 +194,8 @@ function updateBattleItem(battleItem, requiredTradeItemsString, requiredTradeIte
     });
   }
 
-  // createNewBattleItem("Stimulant", 30, "buff", "epic", 58, 30, 3, 3600);
-  // updateBattleItem("Stimulant", requiredTradeItemsString, requiredTradeItemsQuantity);
+  // createNewBattleItem("Superior Oreha Fusion Material(Excavating)", 40, "special", "epic", 22, 250, 20, 3600);
+  // updateBattleItem("Superior Oreha Fusion Material(Excavating)", requiredTradeItemsString, requiredTradeItemsQuantity);
 
 
 
@@ -270,7 +270,7 @@ async function calculateProfit(battleItem){ // This works properly, calculates t
              });
           }
         }, 800);
-      } // Required 50 ms setTimeout
+      }
 
       const calculateProfitForIndex2 = async function(){
         await setTimeout(async function(){
@@ -299,7 +299,7 @@ async function calculateProfit(battleItem){ // This works properly, calculates t
              });
           }
         }, 1200);
-      } // Required 50 ms setTimeout
+      }
 
       const calculateProfitForIndex3 = async function(){
         await setTimeout(async function(){
@@ -328,7 +328,7 @@ async function calculateProfit(battleItem){ // This works properly, calculates t
              });
           }
         }, 1600);
-      } // Required 50 ms setTimeout
+      }
 
       const calculateProfitForIndex4 = async function(){
         await setTimeout(async function(){
@@ -357,7 +357,7 @@ async function calculateProfit(battleItem){ // This works properly, calculates t
              });
           }
         }, 2000);
-      } // Required 50 ms setTimeout
+      }
 
       const calculateProfitForIndex5 = async function(){
         await setTimeout(async function(){
@@ -386,9 +386,9 @@ async function calculateProfit(battleItem){ // This works properly, calculates t
              });
           }
         }, 2400);
-      } // Required 50 ms setTimeout
+      }
 
-      async function calculateOverallProfit(){ // This function lets me async execution
+      async function calculateOverallProfit(){ // This function lets me async execution of calculation method
         await calculateProfitForIndex0()
         .then(calculateProfitForIndex1)
         .then(calculateProfitForIndex2)
@@ -401,6 +401,7 @@ async function calculateProfit(battleItem){ // This works properly, calculates t
 });
 }
 
+// calculateProfit("Superior Oreha Fusion Material(Excavating)");
 
 // This function is used for re-calculating related battle items' profit rate after changing a trade item's price
 // This function will be used when trade or battle item price change process. (Essentially updatePrice function)
