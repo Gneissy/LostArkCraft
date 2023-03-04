@@ -1,5 +1,5 @@
 
-// Loading screen 
+// Loading screen
 $(window).on("load",function(){
   $(".loader-wrapper").fadeOut("slow");
 });
