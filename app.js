@@ -22,7 +22,7 @@ const TradeItem = require("./models/tradeItem.js");
 const BattleItem = require("./models/battleItem.js");
 
 // Bring in functions
-const updatePrice = require("./functions/functions");
+const updatePrice = require("./functions/calculationFunctions");
 
 // Bring in route control functions
 const { getHomePage, getProfitPage, getSelectedTypePage, postNewPrice } = require("./controllers/controlRouteFunctions");

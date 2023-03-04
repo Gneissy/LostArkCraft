@@ -15,7 +15,7 @@ const allTradeItemTypes = ["foraging", "logging", "mining", "hunting", "fishing"
 const allBattleItemTypes = ["recovery", "offense", "utility", "buff", "cooking", "special"];
 
 // Bring in functions
-const updatePrice = require("../functions/functions");
+const updatePrice = require("../functions/calculationFunctions");
 
 // Router for getting home page
 const getHomePage = function(req, res){
