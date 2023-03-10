@@ -270,10 +270,9 @@ p strong{
 }
 
 
-/* ##### Future Feature #####*/
 
-/* onHover showRequirements */
-/* .lens-image{
+/*on hover show requirements*/
+.lens-image{
   position:relative;
   text-decoration: none;
   font-size: 1.5rem;
@@ -294,4 +293,4 @@ p strong{
 @keyframes onHoverAnimation {
   from {opacity: 0; width: 0; height: 0;}
   to {opacity:1; width: 500%; height: 500%;}
-} */
+}
