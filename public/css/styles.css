@@ -269,33 +269,10 @@ p strong{
   100% { height: 0%;}
 }
 
+
+/* ##### Future Feature #####*/
+
 /* onHover showRequirements */
-.lens-image{
-  position:relative;
-  text-decoration: none;
-  font-size: 1.5rem;
-}
-.lens-image .show-image{
-  position:absolute;
-  display:none;
-  z-index:1;
-}
-.hover_img .lens-image:hover .show-image {
-  display:block;
-}
-.req-img{
-  position: relative;
-  animation-name: onHoverAnimation;
-  animation-duration: 0.3s;
-}
-@keyframes onHoverAnimation {
-  from {opacity: 0; width: 0; height: 0;}
-  to {opacity:1; width: 500%; height: 500%;}
-}
-
-
-
-/* yedek */
 /* .lens-image{
   position:relative;
   text-decoration: none;

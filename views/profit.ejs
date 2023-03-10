@@ -10,7 +10,9 @@
         <td class="table-data">img</td>
         <td class="table-data item-name">Item Name</td>
         <td class=" table-data cell">Profit Rate</td>
-        <td class=" table-data cell">Requirements</td>
+
+        <!-- Future Feature -->
+        <!-- <td class=" table-data cell">Requirements</td> -->
       </tr>
 
       <% tradeItemDisplayed.slice().forEach(function(tradeItemDisplayed){ %> <!-- To loop all raws -->
@@ -22,11 +24,16 @@
         </td>
         <td class="table-data item-name"><%= tradeItemDisplayed.name %></td> <!-- Object name -->
         <td class="table-data cell"><%= tradeItemDisplayed.profitRate.toFixed(2) %>%</td> <!-- Displaying 2 digits after decimal -->
-        <td class="table-data cell"> <!--Displaying corresponding Battle item's requirement table-->
+
+        <!-- ##### Future Feature ##### -->
+
+        <!--Displaying corresponding Battle item's requirement table-->
+        <!-- <td class="table-data cell">
           <div class="hover_img">
              <a class = "lens-image" href="#">🔍<span><img class ="req-img" src="images/<%= tradeItemDisplayed.name %>-req.png" alt="image" height="100" /></span></a>
           </div>
-        </td>
+        </td> -->
+
       </tr>
       <% }); %>
 
