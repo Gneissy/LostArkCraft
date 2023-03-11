@@ -16,7 +16,7 @@ const BattleItem = require("./models/battleItem.js");
 
 // Routes
 const router = require("./routes/itemRoutes");
-app.use(router);
+app.use("/", router);
 
 // Running the server
 connectDB().then(function (){
