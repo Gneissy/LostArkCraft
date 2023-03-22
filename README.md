@@ -25,7 +25,7 @@ $ npm install
 
 # How it works?
 <details>
-<summary>Simply by changing prices. Press to see more details.</summary>
+<summary>Simply by changing prices. <strong>Press to see more details</strong>.</summary>
 <img alt = "pic" src="https://user-images.githubusercontent.com/116559962/223535589-a5da2df0-c232-4a9c-abd9-c40c19e71248.png">
 
 <br>
