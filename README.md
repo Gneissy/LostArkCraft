@@ -20,7 +20,7 @@ $ cd LostArkCraft/
 $ npm install
 </code>
 </pre>
-Make sure you add your MongoDB server as process.env.MONGOSERVER to make it work.
+
 
 
 # How it works?
